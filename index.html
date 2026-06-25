@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>キョウセイ管理</title>
+<meta name="theme-color" content="#F3EFFB">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <h1>マウスピース管理</h1>
+  <button id="undoBtn" class="undo-btn hidden">↩ 元に戻す</button>
+</header>
+
+<main>
+
+  <!-- 初回セットアップ -->
+  <section id="setup" class="card hidden">
+    <p class="setup-question">今、マウスピースは装着していますか？</p>
+    <div class="setup-buttons">
+      <button id="setupOn" class="setup-btn on">装着中です</button>
+      <button id="setupOff" class="setup-btn off">外しています</button>
+    </div>
+  </section>
+
+  <!-- メイン画面 -->
+  <section id="mainView" class="hidden">
+
+    <button id="toggleBtn" class="toggle-btn">
+      <span id="toggleIcon" class="toggle-icon">🦷</span>
+      <span id="toggleState" class="toggle-state">装着中</span>
+      <span id="toggleElapsed" class="toggle-elapsed">0分</span>
+    </button>
+
+    <section class="card stats-card">
+      <p class="stats-label">今日の装着時間</p>
+      <p class="stats-value"><span id="todayWorn">0時間0分</span> / <span id="goalLabel">22時間</span></p>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <p id="statusMessage" class="status-message"></p>
+    </section>
+
+    <section class="card stage-card">
+      <div id="stageAlert" class="stage-alert hidden"></div>
+      <p class="stats-label"><span id="stageNumber">1枚目</span></p>
+
+      <label class="settings-label" for="stageStartInput">開始日時</label>
+      <input type="datetime-local" id="stageStartInput">
+
+      <p class="stage-progress" id="stageProgress"></p>
+      <p class="stage-estimate" id="stageEstimate"></p>
+
+      <button id="replaceBtn" class="replace-btn">このマウスピースを交換した</button>
+    </section>
+
+    <section class="card checklist-card">
+      <p class="stats-label">マウスピース チェックリスト</p>
+      <ul id="stageChecklist" class="checklist"></ul>
+    </section>
+
+    <section class="card history-card">
+      <p class="stats-label">直近10日間</p>
+      <ul id="historyList" class="history-list"></ul>
+    </section>
+
+    <section class="card settings-card">
+      <label class="settings-label" for="goalInput">1日の目標時間（時間）</label>
+      <input type="number" id="goalInput" min="18" max="24" step="1">
+
+      <label class="settings-label" for="totalAlignersInput">合計枚数（任意・あとで変更可）</label>
+      <input type="number" id="totalAlignersInput" min="1" step="1" placeholder="未設定でもOK">
+
+      <button id="resetBtn" class="reset-btn">データを初期化する</button>
+    </section>
+
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

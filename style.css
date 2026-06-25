@@ -1,0 +1,369 @@
+:root {
+  --bg: #F6F1FB;
+  --card-bg: #FFFFFF;
+  --text: #4A4660;
+  --text-soft: #8B86A3;
+  --mint: #BFEFD9;
+  --mint-deep: #8FD9B8;
+  --peach: #FFD9C7;
+  --peach-deep: #FFB89C;
+  --lavender: #D9CDF2;
+  --blue: #BFE0F5;
+  --shadow: rgba(150, 130, 200, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Hiragino Sans", "Yu Gothic UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-header {
+  position: relative;
+  text-align: center;
+  padding: 24px 16px 8px;
+}
+
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.undo-btn {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  border: none;
+  background: var(--lavender);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+main {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 6px 18px var(--shadow);
+}
+
+/* 初回セットアップ */
+.setup-question {
+  text-align: center;
+  font-size: 16px;
+  margin: 8px 0 20px;
+}
+
+.setup-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.setup-btn {
+  flex: 1;
+  padding: 16px 8px;
+  border: none;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.setup-btn.on {
+  background: var(--mint);
+}
+
+.setup-btn.off {
+  background: var(--peach);
+}
+
+/* メイントグルボタン */
+.toggle-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 220px;
+  margin: 8px auto;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--mint);
+  box-shadow: 0 10px 28px var(--shadow);
+  transition: background 0.3s ease, transform 0.15s ease;
+  gap: 6px;
+}
+
+.toggle-btn:active {
+  transform: scale(0.97);
+}
+
+.toggle-btn.off-state {
+  background: var(--peach);
+}
+
+.toggle-icon {
+  font-size: 40px;
+}
+
+.toggle-state {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.toggle-elapsed {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* 統計カード */
+.stats-label {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0 0 6px;
+}
+
+.stats-value {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+#goalLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+.progress-bar {
+  height: 14px;
+  border-radius: 8px;
+  background: #EFEAF8;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--lavender), var(--blue));
+  border-radius: 8px;
+  transition: width 0.3s ease;
+}
+
+.status-message {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--text-soft);
+  text-align: center;
+}
+
+/* 履歴 */
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #FAF8FD;
+}
+
+.history-list li.goal-met {
+  background: var(--mint);
+}
+
+.history-date {
+  color: var(--text-soft);
+}
+
+.history-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.history-input {
+  width: 52px;
+  text-align: right;
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 1px solid #E3DCF2;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  background: #FFFFFF;
+}
+
+.history-unit {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* マウスピース管理（ステージ） */
+.stage-alert {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.stage-alert.ready {
+  background: var(--mint);
+  color: var(--text);
+}
+
+.stage-alert.extended {
+  background: var(--peach);
+  color: var(--text);
+}
+
+#stageStartInput {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #E3DCF2;
+  font-size: 15px;
+  color: var(--text);
+  background: #FAF8FD;
+  margin-bottom: 12px;
+}
+
+.stage-progress {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0 0 4px;
+}
+
+.stage-estimate {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 0 0 14px;
+}
+
+.replace-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: var(--lavender);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* チェックリスト */
+.checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #FAF8FD;
+}
+
+.checklist li.done {
+  background: var(--mint);
+}
+
+.checklist li.current {
+  background: var(--blue);
+}
+
+.checklist li.future {
+  color: var(--text-soft);
+  opacity: 0.7;
+}
+
+.checklist-icon {
+  font-size: 14px;
+}
+
+.checklist-range {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+/* 設定 */
+.settings-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin: 16px 0 8px;
+}
+
+.settings-label:first-of-type {
+  margin-top: 0;
+}
+
+#goalInput {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #E3DCF2;
+  font-size: 15px;
+  color: var(--text);
+  background: #FAF8FD;
+}
+
+.reset-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: 1px solid var(--peach-deep);
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: var(--peach-deep);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
