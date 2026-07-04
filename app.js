@@ -41,8 +41,13 @@ const el = {
   stageDeficit: document.getElementById('stageDeficit'),
   undoBtn: document.getElementById('undoBtn'),
   menuBtn: document.getElementById('menuBtn'),
+  navMenu: document.getElementById('navMenu'),
+  navSettingsBtn: document.getElementById('navSettingsBtn'),
+  navQaBtn: document.getElementById('navQaBtn'),
   settingsPage: document.getElementById('settingsPage'),
   settingsBackBtn: document.getElementById('settingsBackBtn'),
+  qaPage: document.getElementById('qaPage'),
+  qaBackBtn: document.getElementById('qaBackBtn'),
   resetBtn: document.getElementById('resetBtn'),
   wearAlert: document.getElementById('wearAlert'),
   alertInput: document.getElementById('alertInput'),
@@ -632,8 +637,31 @@ el.toggleBtn.addEventListener('click', toggle);
 el.replaceBtn.addEventListener('click', replaceStage);
 el.undoBtn.addEventListener('click', undo);
 el.resetBtn.addEventListener('click', resetAll);
-el.menuBtn.addEventListener('click', () => el.settingsPage.classList.add('open'));
+el.menuBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  el.navMenu.classList.toggle('open');
+});
+
+el.navSettingsBtn.addEventListener('click', () => {
+  el.navMenu.classList.remove('open');
+  el.settingsPage.classList.add('open');
+});
+
+el.navQaBtn.addEventListener('click', () => {
+  el.navMenu.classList.remove('open');
+  el.qaPage.classList.add('open');
+});
+
 el.settingsBackBtn.addEventListener('click', () => el.settingsPage.classList.remove('open'));
+el.qaBackBtn.addEventListener('click', () => el.qaPage.classList.remove('open'));
+
+// メニュー外クリックで閉じる
+document.addEventListener('click', () => el.navMenu.classList.remove('open'));
+
+// Q&Aアコーディオン
+document.querySelectorAll('.qa-question').forEach((btn) => {
+  btn.addEventListener('click', () => btn.parentElement.classList.toggle('open'));
+});
 
 el.stageStartInput.addEventListener('change', () => {
   const stage = currentStage();

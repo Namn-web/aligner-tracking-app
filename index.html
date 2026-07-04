@@ -17,10 +17,15 @@
 <header class="app-header">
   <button id="undoBtn" class="undo-btn hidden">↩ 元に戻す</button>
   <h1>マウスピース管理</h1>
-  <button id="menuBtn" class="menu-btn" aria-label="設定を開く">
+  <button id="menuBtn" class="menu-btn" aria-label="メニューを開く">
     <span></span><span></span><span></span>
   </button>
 </header>
+
+<div id="navMenu" class="nav-menu">
+  <button id="navSettingsBtn" class="nav-menu-item">⚙️ 設定</button>
+  <button id="navQaBtn" class="nav-menu-item">💬 Q&amp;A</button>
+</div>
 
 <main>
 
@@ -119,6 +124,67 @@
     <div class="card">
       <p class="settings-section-title">データ管理</p>
       <button id="resetBtn" class="reset-btn">データを初期化する</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Q&Aページ -->
+<div id="qaPage" class="settings-page">
+  <div class="settings-header">
+    <button id="qaBackBtn" class="settings-back-btn">← 戻る</button>
+    <h2>Q&amp;A</h2>
+  </div>
+  <div class="settings-content">
+
+    <div class="qa-item">
+      <button class="qa-question">1日に何時間装着が必要ですか？</button>
+      <div class="qa-answer">基本的に1日20〜22時間以上の装着が必要です。食事・歯磨き・アライナーの洗浄時以外は装着し続けることが理想です。装着時間が不足すると歯の移動が遅れ、次のアライナーに進めない場合があります。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">食事のときは外してもいいですか？</button>
+      <div class="qa-answer">はい、必ず外してください。装着したまま食事をするとアライナーの破損・変形・変色の原因になります。また食べかすが挟まり、虫歯や歯周病のリスクが高まります。食後は歯を磨いてから装着してください。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">水以外の飲み物を飲むときは？</button>
+      <div class="qa-answer">水以外を飲む場合は外してください。コーヒー・紅茶・ジュース・アルコールなどはアライナーを着色・変形させます。糖分を含む飲み物はアライナー内部に閉じ込められ、虫歯の原因になります。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">装着前の歯磨きは必須ですか？</button>
+      <div class="qa-answer">はい、必須です。食後そのまま装着すると、食べかすや糖分がアライナー内部に閉じ込められ虫歯・口臭の原因になります。外出先でも洗口液やデンタルフロスを活用しましょう。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">アライナーの洗い方は？</button>
+      <div class="qa-answer">流水とやわらかい歯ブラシで優しく洗ってください。専用の洗浄剤（リテーナークリーナーなど）も効果的です。熱湯・歯磨き粉は変形・細かい傷の原因になるため使用しないでください。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">1枚のアライナーはどのくらい使いますか？</button>
+      <div class="qa-answer">担当医の指示によって異なりますが、一般的に1枚あたり7〜14日です。装着時間が不足している場合は自己判断で交換を進めず、担当医に相談してください。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">装着中に痛みや違和感はありますか？</button>
+      <div class="qa-answer">アライナー交換直後に締め付け感や軽い痛みを感じることがあります。これは歯が正しく動いているサインで、通常2〜3日で落ち着きます。強い痛みが続く場合は担当医に相談してください。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">アライナーをなくしたり壊したりしたら？</button>
+      <div class="qa-answer">すぐに担当医に連絡してください。それまでの間は1つ前のアライナーを装着するか、担当医の指示に従ってください。外したときは必ずケースに入れて保管する習慣をつけましょう。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">スポーツや楽器演奏のときはどうすればいい？</button>
+      <div class="qa-answer">激しいコンタクトスポーツ（ラグビー・格闘技など）の場合はマウスガードとの兼ね合いを担当医に相談してください。管楽器の演奏は慣れるまで時間がかかることがありますが、継続すると改善されます。</div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question">治療期間はどのくらいですか？</button>
+      <div class="qa-answer">症例の難易度によって大きく異なります。軽度なら6〜12ヶ月、中程度で1〜2年、重度の場合はそれ以上かかることもあります。定期的な通院と装着時間の遵守が期間短縮につながります。</div>
     </div>
 
   </div>
