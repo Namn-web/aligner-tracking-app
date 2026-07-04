@@ -1,26 +1,25 @@
 :root {
-  --bg: #ECEAE4;
-  --card-bg: #FFFFFF;
-  --text: #1C1C1C;
-  --text-soft: #8A8A8A;
-  --primary: #4CBFD8;
+  --bg:           #DDD9D2;
+  --card-bg:      #FFFFFF;
+  --text:         #1C1C1C;
+  --text-soft:    #8A8A8A;
+  --primary:      #4CBFD8;
   --primary-deep: #2FA8C4;
-  --primary-light: #D6F3FA;
-  --green: #4DC99A;
-  --green-deep: #2EB07E;
-  --green-light: #D4F5E8;
-  --peach: #F5C5A8;
-  --peach-deep: #E09070;
-  --peach-light: #FDEEE6;
-  --border: #E0DDD6;
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03);
-  --shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
-  --shadow-lg: 0 8px 28px rgba(0,0,0,0.12);
+  --primary-light:#D6F3FA;
+  --green:        #4DC99A;
+  --green-deep:   #2EB07E;
+  --green-light:  #D4F5E8;
+  --peach:        #F5C5A8;
+  --peach-deep:   #E09070;
+  --peach-light:  #FDEEE6;
+  --border:       #C8C4BC;
+
+  /* クレイシャドウ */
+  --clay-light: rgba(255, 255, 255, 0.78);
+  --clay-dark:  rgba(0, 0, 0, 0.18);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -31,9 +30,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 /* ヘッダー */
 .app-header {
@@ -41,7 +38,7 @@ body {
   text-align: center;
   padding: 28px 16px 14px;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 .app-header h1 {
@@ -56,14 +53,17 @@ body {
   position: absolute;
   top: 18px;
   left: 16px;
-  border: 1px solid var(--border);
-  background: var(--card-bg);
+  border: none;
+  background: var(--bg);
   color: var(--text-soft);
   font-size: 12px;
   font-weight: 600;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
   cursor: pointer;
+  box-shadow:
+    4px 4px 8px var(--clay-dark),
+    -2px -2px 6px var(--clay-light);
 }
 
 .menu-btn {
@@ -72,9 +72,9 @@ body {
   right: 16px;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--border);
-  background: var(--card-bg);
-  border-radius: 10px;
+  border: none;
+  background: var(--bg);
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -82,6 +82,9 @@ body {
   justify-content: center;
   gap: 5px;
   padding: 0;
+  box-shadow:
+    4px 4px 8px var(--clay-dark),
+    -2px -2px 6px var(--clay-light);
 }
 
 .menu-btn span {
@@ -97,14 +100,15 @@ body {
   position: fixed;
   top: 66px;
   right: 16px;
-  background: var(--card-bg);
-  border-radius: 14px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border);
-  padding: 6px;
+  background: linear-gradient(145deg, #F0EDE8, #E4E0DA);
+  border-radius: 18px;
+  box-shadow:
+    8px 8px 20px var(--clay-dark),
+    -4px -4px 12px var(--clay-light);
+  padding: 8px;
   z-index: 150;
   min-width: 148px;
-  transform: scale(0.9) translateY(-8px);
+  transform: scale(0.88) translateY(-8px);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.18s ease, opacity 0.18s ease;
@@ -122,7 +126,7 @@ body {
   width: 100%;
   padding: 11px 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: transparent;
   color: var(--text);
   font-size: 14px;
@@ -132,11 +136,9 @@ body {
   transition: background 0.12s ease;
 }
 
-.nav-menu-item:hover {
-  background: var(--bg);
-}
+.nav-menu-item:hover { background: rgba(0,0,0,0.05); }
 
-/* 設定・QAページ共通（右からスライド） */
+/* 設定・QAページ共通 */
 .settings-page {
   position: fixed;
   inset: 0;
@@ -147,15 +149,13 @@ body {
   overflow-y: auto;
 }
 
-.settings-page.open {
-  transform: translateX(0);
-}
+.settings-page.open { transform: translateX(0); }
 
 .settings-header {
   position: sticky;
   top: 0;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
   padding: 20px 16px 14px;
   display: flex;
   align-items: center;
@@ -164,15 +164,18 @@ body {
 }
 
 .settings-back-btn {
-  border: 1px solid var(--border);
-  background: var(--card-bg);
+  border: none;
+  background: var(--bg);
   color: var(--text-soft);
   font-size: 13px;
   font-weight: 600;
-  padding: 7px 14px;
+  padding: 7px 16px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow:
+    4px 4px 8px var(--clay-dark),
+    -2px -2px 6px var(--clay-light);
 }
 
 .settings-header h2 {
@@ -202,17 +205,19 @@ body {
 
 /* Q&Aアコーディオン */
 .qa-item {
-  background: var(--card-bg);
-  border-radius: 14px;
+  background: linear-gradient(145deg, #FFFFFF, #F5F2EE);
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
+  box-shadow:
+    6px 6px 14px var(--clay-dark),
+    -3px -3px 9px var(--clay-light),
+    inset 1px 1px 0 rgba(255,255,255,0.9);
 }
 
 .qa-question {
   width: 100%;
   text-align: left;
-  padding: 16px 44px 16px 16px;
+  padding: 16px 44px 16px 18px;
   border: none;
   background: transparent;
   font-size: 14px;
@@ -234,9 +239,7 @@ body {
   transition: transform 0.22s ease;
 }
 
-.qa-item.open .qa-question::after {
-  transform: translateY(-50%) rotate(-180deg);
-}
+.qa-item.open .qa-question::after { transform: translateY(-50%) rotate(-180deg); }
 
 .qa-answer {
   max-height: 0;
@@ -245,13 +248,13 @@ body {
   font-size: 13px;
   line-height: 1.8;
   color: var(--text-soft);
-  padding: 0 16px;
-  border-top: 0px solid var(--border);
+  padding: 0 18px;
+  border-top: 0px solid rgba(0,0,0,0.06);
 }
 
 .qa-item.open .qa-answer {
   max-height: 400px;
-  padding: 12px 16px 16px;
+  padding: 12px 18px 16px;
   border-top-width: 1px;
 }
 
@@ -262,15 +265,18 @@ main {
   padding: 16px 16px 48px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
+/* クレイカード */
 .card {
-  background: var(--card-bg);
-  border-radius: 18px;
-  padding: 20px;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(0,0,0,0.04);
+  background: linear-gradient(145deg, #FFFFFF, #F5F2EE);
+  border-radius: 26px;
+  padding: 22px;
+  box-shadow:
+    8px 8px 20px var(--clay-dark),
+    -4px -4px 12px var(--clay-light),
+    inset 1px 1px 0 rgba(255,255,255,0.95);
 }
 
 /* 初回セットアップ */
@@ -280,24 +286,29 @@ main {
   margin: 8px 0 20px;
 }
 
-.setup-buttons {
-  display: flex;
-  gap: 10px;
-}
+.setup-buttons { display: flex; gap: 12px; }
 
 .setup-btn {
   flex: 1;
-  padding: 16px 8px;
+  padding: 18px 8px;
   border: none;
-  border-radius: 14px;
+  border-radius: 18px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #FFFFFF;
   cursor: pointer;
+  box-shadow:
+    5px 5px 12px var(--clay-dark),
+    -3px -3px 8px var(--clay-light),
+    inset 1px 1px 3px rgba(255,255,255,0.4);
 }
 
-.setup-btn.on  { background: var(--primary); }
-.setup-btn.off { background: var(--peach-deep); }
+.setup-btn.on  {
+  background: radial-gradient(circle at 38% 32%, #70D9F0, #4CBFD8);
+}
+.setup-btn.off {
+  background: radial-gradient(circle at 38% 32%, #F8C0A0, #E09070);
+}
 
 /* メイントグルエリア */
 .toggle-wrap {
@@ -311,18 +322,19 @@ main {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  filter: drop-shadow(3px 4px 5px rgba(0,0,0,0.14));
 }
 
 .ring-track {
   fill: none;
-  stroke: var(--border);
-  stroke-width: 8;
+  stroke: #C8C4BC;
+  stroke-width: 10;
 }
 
 .ring-fill {
   fill: none;
   stroke: var(--primary);
-  stroke-width: 8;
+  stroke-width: 10;
   stroke-linecap: round;
   stroke-dasharray: 691.2;
   stroke-dashoffset: 691.2;
@@ -331,10 +343,9 @@ main {
   transition: stroke-dashoffset 0.5s ease, stroke 0.4s ease;
 }
 
-.ring-fill.done {
-  stroke: var(--green);
-}
+.ring-fill.done { stroke: var(--green); }
 
+/* クレイトグルボタン（メインの見せ場） */
 .toggle-btn {
   position: absolute;
   inset: 12px;
@@ -345,34 +356,49 @@ main {
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  background: var(--primary);
-  box-shadow: 0 8px 24px rgba(76, 191, 216, 0.35), inset 0 1px 2px rgba(255,255,255,0.4);
+  background: radial-gradient(circle at 38% 32%, #70D9F0, #4CBFD8);
+  box-shadow:
+    12px 12px 28px rgba(0,0,0,0.22),
+    -6px -6px 18px rgba(255,255,255,0.65),
+    inset 3px 3px 6px rgba(255,255,255,0.5),
+    inset -3px -3px 6px rgba(0,80,120,0.12);
   transition: background 0.3s ease, transform 0.15s ease, box-shadow 0.3s ease;
   gap: 4px;
 }
 
-.toggle-btn:active {
-  transform: scale(0.96);
-}
+.toggle-btn:active { transform: scale(0.95); }
 
 .toggle-btn.off-state {
-  background: var(--card-bg);
-  box-shadow: var(--shadow), inset 0 1px 2px rgba(255,255,255,0.8);
+  background: radial-gradient(circle at 38% 32%, #EEEAE4, #D8D4CE);
+  box-shadow:
+    12px 12px 28px rgba(0,0,0,0.18),
+    -6px -6px 18px rgba(255,255,255,0.80),
+    inset 3px 3px 6px rgba(255,255,255,0.6),
+    inset -3px -3px 6px rgba(0,0,0,0.08);
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 8px 24px rgba(76,191,216,0.35), inset 0 1px 2px rgba(255,255,255,0.4), 0 0 0 0 rgba(76,191,216,0.3); }
-  50%       { box-shadow: 0 8px 24px rgba(76,191,216,0.35), inset 0 1px 2px rgba(255,255,255,0.4), 0 0 0 12px rgba(76,191,216,0); }
+  0%, 100% {
+    box-shadow:
+      12px 12px 28px rgba(0,0,0,0.22),
+      -6px -6px 18px rgba(255,255,255,0.65),
+      inset 3px 3px 6px rgba(255,255,255,0.5),
+      inset -3px -3px 6px rgba(0,80,120,0.12),
+      0 0 0 0 rgba(76,191,216,0.35);
+  }
+  50% {
+    box-shadow:
+      12px 12px 28px rgba(0,0,0,0.22),
+      -6px -6px 18px rgba(255,255,255,0.65),
+      inset 3px 3px 6px rgba(255,255,255,0.5),
+      inset -3px -3px 6px rgba(0,80,120,0.12),
+      0 0 0 14px rgba(76,191,216,0);
+  }
 }
 
-.toggle-btn.on-state {
-  animation: pulse 3s ease-in-out infinite;
-}
+.toggle-btn.on-state { animation: pulse 3s ease-in-out infinite; }
 
-.toggle-icon {
-  font-size: 42px;
-  line-height: 1;
-}
+.toggle-icon { font-size: 42px; line-height: 1; }
 
 .toggle-state {
   font-size: 19px;
@@ -380,18 +406,10 @@ main {
   color: #FFFFFF;
 }
 
-.toggle-btn.off-state .toggle-state {
-  color: var(--text);
-}
+.toggle-btn.off-state .toggle-state { color: var(--text); }
 
-.toggle-elapsed {
-  font-size: 12px;
-  color: rgba(255,255,255,0.75);
-}
-
-.toggle-btn.off-state .toggle-elapsed {
-  color: var(--text-soft);
-}
+.toggle-elapsed { font-size: 12px; color: rgba(255,255,255,0.8); }
+.toggle-btn.off-state .toggle-elapsed { color: var(--text-soft); }
 
 /* 統計カード */
 .stats-label {
@@ -415,18 +433,19 @@ main {
 .stats-goal {
   font-size: 13px;
   color: var(--text-soft);
-  margin: 0 0 14px;
+  margin: 0 0 16px;
 }
 
-.stats-goal span {
-  font-weight: 700;
-  color: var(--text);
-}
+.stats-goal span { font-weight: 700; color: var(--text); }
 
+/* クレイプログレスバー（溝に埋め込まれた感） */
 .progress-bar {
-  height: 8px;
+  height: 12px;
   border-radius: 999px;
   background: var(--bg);
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.16),
+    inset -2px -2px 5px rgba(255,255,255,0.7);
   overflow: hidden;
 }
 
@@ -443,10 +462,11 @@ main {
   border-radius: 999px;
   transition: width 0.5s ease;
   animation: shimmer 2.5s linear infinite;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
 }
 
 .progress-fill.done {
-  background: var(--green);
+  background: linear-gradient(90deg, var(--green-deep), var(--green));
   animation: none;
 }
 
@@ -469,7 +489,7 @@ main {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .history-list li {
@@ -477,67 +497,77 @@ main {
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
   background: var(--bg);
-  border: 1px solid transparent;
+  box-shadow:
+    3px 3px 7px var(--clay-dark),
+    -2px -2px 5px var(--clay-light);
 }
 
 .history-list li.goal-met {
-  background: var(--green-light);
-  border-color: rgba(77, 201, 154, 0.2);
+  background: linear-gradient(135deg, #C8F0DC, #D8F5E8);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.14),
+    -2px -2px 5px rgba(255,255,255,0.85);
 }
 
-.history-date {
-  color: var(--text-soft);
-  font-size: 13px;
-}
+.history-date { color: var(--text-soft); font-size: 13px; }
 
-.history-value {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.history-value { display: flex; align-items: center; gap: 6px; }
 
 .history-input {
   width: 52px;
   text-align: right;
   padding: 4px 6px;
   border-radius: 8px;
-  border: 1px solid var(--border);
+  border: none;
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
-  background: var(--card-bg);
+  background: var(--bg);
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.12),
+    inset -1px -1px 3px rgba(255,255,255,0.7);
 }
 
-.history-unit {
-  font-size: 12px;
-  color: var(--text-soft);
-}
+.history-unit { font-size: 12px; color: var(--text-soft); }
 
+/* クレイバッジ */
 .history-badge {
   font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
   white-space: nowrap;
+  box-shadow:
+    2px 2px 5px rgba(0,0,0,0.14),
+    -1px -1px 3px rgba(255,255,255,0.7),
+    inset 1px 1px 2px rgba(255,255,255,0.4);
 }
 
-.history-badge.ok   { background: var(--green-light); color: var(--green-deep); }
-.history-badge.miss { background: var(--peach-light); color: var(--peach-deep); }
+.history-badge.ok   {
+  background: linear-gradient(135deg, #6ADBA8, #4DC99A);
+  color: #FFFFFF;
+}
+.history-badge.miss {
+  background: linear-gradient(135deg, #F8C0A0, #E09070);
+  color: #FFFFFF;
+}
 
 /* 外し時間アラートバナー */
 .wear-alert {
-  background: #FFF5D6;
-  border: 1px solid #E8C840;
-  border-radius: 14px;
+  background: linear-gradient(135deg, #FFF3C0, #FFE880);
+  border-radius: 16px;
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #7A6000;
+  color: #6A5400;
   text-align: center;
   margin-bottom: 8px;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.14),
+    -2px -2px 6px rgba(255,255,255,0.7);
 }
 
 /* 通知設定行 */
@@ -549,53 +579,57 @@ main {
 }
 
 .notif-btn {
-  padding: 10px 16px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 10px;
-  background: var(--primary);
+  border-radius: 12px;
+  background: radial-gradient(circle at 38% 35%, #70D9F0, #4CBFD8);
   color: #FFFFFF;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.18),
+    -2px -2px 6px rgba(255,255,255,0.6),
+    inset 1px 1px 3px rgba(255,255,255,0.4);
 }
 
-.notif-status {
-  font-size: 12px;
-  color: var(--text-soft);
-}
+.notif-status { font-size: 12px; color: var(--text-soft); }
 
-/* マウスピース管理（ステージ） */
+/* ステージアラート */
 .stage-alert {
-  border-radius: 10px;
+  border-radius: 14px;
   padding: 10px 14px;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 12px;
-  border: 1px solid transparent;
+  box-shadow:
+    3px 3px 8px rgba(0,0,0,0.12),
+    -2px -2px 5px rgba(255,255,255,0.7);
 }
 
 .stage-alert.ready {
-  background: var(--green-light);
-  border-color: rgba(77, 201, 154, 0.3);
-  color: var(--green-deep);
+  background: linear-gradient(135deg, #7ADDB0, #4DC99A);
+  color: #FFFFFF;
 }
 
 .stage-alert.extended {
-  background: var(--peach-light);
-  border-color: rgba(224, 144, 112, 0.3);
-  color: var(--peach-deep);
+  background: linear-gradient(135deg, #F8C0A0, #E09070);
+  color: #FFFFFF;
 }
 
 #stageStartInput {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
   font-size: 15px;
   color: var(--text);
   background: var(--bg);
   margin-bottom: 12px;
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.14),
+    inset -2px -2px 5px rgba(255,255,255,0.7);
 }
 
 .stage-progress {
@@ -605,7 +639,7 @@ main {
   text-align: center;
 }
 
-/* 7日ドット */
+/* クレイ7日ドット */
 .stage-dots {
   display: flex;
   gap: 8px;
@@ -615,19 +649,45 @@ main {
 }
 
 .stage-dot {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 2px solid var(--border);
-  background: transparent;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  border: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
   flex-shrink: 0;
 }
 
-.stage-dot.met    { background: var(--green);       border-color: var(--green); }
-.stage-dot.missed { background: var(--peach-deep);   border-color: var(--peach-deep); }
-.stage-dot.today  { background: var(--primary);      border-color: var(--primary); }
-.stage-dot.future { background: transparent;          border-color: var(--border); }
+.stage-dot.met {
+  background: radial-gradient(circle at 35% 30%, #7ADFB0, #4DC99A);
+  box-shadow:
+    4px 4px 9px rgba(0,0,0,0.2),
+    -2px -2px 6px rgba(255,255,255,0.65),
+    inset 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.stage-dot.missed {
+  background: radial-gradient(circle at 35% 30%, #F8C0A0, #E09070);
+  box-shadow:
+    4px 4px 9px rgba(0,0,0,0.2),
+    -2px -2px 6px rgba(255,255,255,0.65),
+    inset 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.stage-dot.today {
+  background: radial-gradient(circle at 35% 30%, #80E0F5, #4CBFD8);
+  box-shadow:
+    4px 4px 9px rgba(0,0,0,0.22),
+    -2px -2px 6px rgba(255,255,255,0.65),
+    inset 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.stage-dot.future {
+  background: radial-gradient(circle at 35% 30%, #EEEAE4, #D8D4CE);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.14),
+    -2px -2px 5px rgba(255,255,255,0.75),
+    inset 1px 1px 2px rgba(255,255,255,0.5);
+}
 
 /* ステージ累計不足 */
 .stage-deficit {
@@ -646,17 +706,23 @@ main {
   margin: 0 0 14px;
 }
 
+/* クレイアクションボタン */
 .replace-btn {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   border: none;
-  border-radius: 12px;
-  background: var(--primary);
+  border-radius: 18px;
+  background: radial-gradient(circle at 38% 35%, #70D9F0, #4CBFD8);
   color: #FFFFFF;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.01em;
+  box-shadow:
+    6px 6px 14px rgba(0,0,0,0.2),
+    -3px -3px 9px rgba(255,255,255,0.6),
+    inset 2px 2px 4px rgba(255,255,255,0.45),
+    inset -2px -2px 4px rgba(0,80,120,0.12);
 }
 
 /* チェックリスト */
@@ -666,7 +732,7 @@ main {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .checklist li {
@@ -674,26 +740,29 @@ main {
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
   background: var(--bg);
-  border: 1px solid transparent;
+  box-shadow:
+    3px 3px 7px var(--clay-dark),
+    -2px -2px 5px var(--clay-light);
 }
 
 .checklist li.done {
-  background: var(--green-light);
-  border-color: rgba(77, 201, 154, 0.2);
+  background: linear-gradient(135deg, #C8F0DC, #D8F5E8);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.14),
+    -2px -2px 5px rgba(255,255,255,0.85);
 }
 
 .checklist li.current {
-  background: var(--primary-light);
-  border-color: rgba(76, 191, 216, 0.2);
+  background: linear-gradient(135deg, #C4EDF8, #D6F3FA);
+  box-shadow:
+    3px 3px 7px rgba(0,0,0,0.14),
+    -2px -2px 5px rgba(255,255,255,0.85);
 }
 
-.checklist li.future {
-  color: var(--text-soft);
-  opacity: 0.6;
-}
+.checklist li.future { color: var(--text-soft); opacity: 0.6; }
 
 .checklist-icon { font-size: 14px; }
 
@@ -717,31 +786,41 @@ main {
 #totalAlignersInput,
 #alertInput {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: none;
   font-size: 15px;
   color: var(--text);
   background: var(--bg);
   outline: none;
-  transition: border-color 0.2s ease;
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.14),
+    inset -2px -2px 5px rgba(255,255,255,0.7);
+  transition: box-shadow 0.2s ease;
 }
 
 #goalInput:focus,
 #totalAlignersInput:focus,
 #alertInput:focus {
-  border-color: var(--primary);
+  box-shadow:
+    inset 3px 3px 7px rgba(0,0,0,0.14),
+    inset -2px -2px 5px rgba(255,255,255,0.7),
+    0 0 0 3px rgba(76,191,216,0.25);
 }
 
 .reset-btn {
   width: 100%;
   margin-top: 4px;
   padding: 12px;
-  border: 1px solid var(--peach-deep);
-  border-radius: 10px;
-  background: transparent;
-  color: var(--peach-deep);
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #F8C0A0, #E09070);
+  color: #FFFFFF;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  box-shadow:
+    4px 4px 10px rgba(0,0,0,0.16),
+    -2px -2px 6px rgba(255,255,255,0.65),
+    inset 1px 1px 3px rgba(255,255,255,0.4);
 }
