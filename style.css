@@ -49,7 +49,7 @@ body {
 .undo-btn {
   position: absolute;
   top: 18px;
-  right: 16px;
+  left: 16px;
   border: none;
   background: var(--lavender);
   color: var(--text);
@@ -58,6 +58,95 @@ body {
   padding: 6px 12px;
   border-radius: 999px;
   cursor: pointer;
+}
+
+.menu-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--lavender);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+}
+
+.menu-btn span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+}
+
+/* 設定ページ */
+.settings-page {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.settings-page.open {
+  transform: translateX(0);
+}
+
+.settings-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(160deg, #EDE7F8 0%, #F6F1FB 100%);
+  padding: 20px 16px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+}
+
+.settings-back-btn {
+  border: none;
+  background: var(--lavender);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.settings-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.settings-content {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin: 0 0 12px;
 }
 
 main {

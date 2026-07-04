@@ -40,6 +40,9 @@ const el = {
   stageDots: document.getElementById('stageDots'),
   stageDeficit: document.getElementById('stageDeficit'),
   undoBtn: document.getElementById('undoBtn'),
+  menuBtn: document.getElementById('menuBtn'),
+  settingsPage: document.getElementById('settingsPage'),
+  settingsBackBtn: document.getElementById('settingsBackBtn'),
   resetBtn: document.getElementById('resetBtn'),
   wearAlert: document.getElementById('wearAlert'),
   alertInput: document.getElementById('alertInput'),
@@ -629,6 +632,8 @@ el.toggleBtn.addEventListener('click', toggle);
 el.replaceBtn.addEventListener('click', replaceStage);
 el.undoBtn.addEventListener('click', undo);
 el.resetBtn.addEventListener('click', resetAll);
+el.menuBtn.addEventListener('click', () => el.settingsPage.classList.add('open'));
+el.settingsBackBtn.addEventListener('click', () => el.settingsPage.classList.remove('open'));
 
 el.stageStartInput.addEventListener('change', () => {
   const stage = currentStage();

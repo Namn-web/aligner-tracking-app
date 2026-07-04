@@ -15,8 +15,11 @@
 <body>
 
 <header class="app-header">
-  <h1>マウスピース管理</h1>
   <button id="undoBtn" class="undo-btn hidden">↩ 元に戻す</button>
+  <h1>マウスピース管理</h1>
+  <button id="menuBtn" class="menu-btn" aria-label="設定を開く">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <main>
@@ -82,26 +85,44 @@
       <ul id="historyList" class="history-list"></ul>
     </section>
 
-    <section class="card settings-card">
+  </section>
+
+</main>
+
+<!-- 設定ページ（右からスライドイン） -->
+<div id="settingsPage" class="settings-page">
+  <div class="settings-header">
+    <button id="settingsBackBtn" class="settings-back-btn">← 戻る</button>
+    <h2>設定</h2>
+  </div>
+  <div class="settings-content">
+
+    <div class="card">
+      <p class="settings-section-title">装着目標</p>
       <label class="settings-label" for="goalInput">1日の目標時間（時間）</label>
       <input type="number" id="goalInput" min="18" max="24" step="1">
 
       <label class="settings-label" for="totalAlignersInput">合計枚数（任意・あとで変更可）</label>
       <input type="number" id="totalAlignersInput" min="1" step="1" placeholder="未設定でもOK">
+    </div>
 
+    <div class="card">
+      <p class="settings-section-title">アラート・通知</p>
       <label class="settings-label">外し時間アラート（分、0で無効）</label>
       <input type="number" id="alertInput" min="0" step="5" placeholder="例：60">
       <div class="notif-row">
         <button id="notifBtn" class="notif-btn">通知を有効にする</button>
         <span id="notifStatus" class="notif-status"></span>
       </div>
+    </div>
 
+    <div class="card">
+      <p class="settings-section-title">データ管理</p>
       <button id="resetBtn" class="reset-btn">データを初期化する</button>
-    </section>
+    </div>
 
-  </section>
-
-</main>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>
