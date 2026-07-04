@@ -33,15 +33,24 @@
   <!-- メイン画面 -->
   <section id="mainView" class="hidden">
 
-    <button id="toggleBtn" class="toggle-btn">
-      <span id="toggleIcon" class="toggle-icon">🦷</span>
-      <span id="toggleState" class="toggle-state">装着中</span>
-      <span id="toggleElapsed" class="toggle-elapsed">0分</span>
-    </button>
+    <div id="wearAlert" class="wear-alert hidden"></div>
+
+    <div class="toggle-wrap">
+      <svg class="progress-ring" viewBox="0 0 244 244" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ring-track" cx="122" cy="122" r="110"/>
+        <circle id="ringFill" class="ring-fill" cx="122" cy="122" r="110"/>
+      </svg>
+      <button id="toggleBtn" class="toggle-btn">
+        <span id="toggleIcon" class="toggle-icon">🦷</span>
+        <span id="toggleState" class="toggle-state">装着中</span>
+        <span id="toggleElapsed" class="toggle-elapsed">0分</span>
+      </button>
+    </div>
 
     <section class="card stats-card">
       <p class="stats-label">今日の装着時間</p>
-      <p class="stats-value"><span id="todayWorn">0時間0分</span> / <span id="goalLabel">22時間</span></p>
+      <p class="stats-value"><span id="todayWorn">0分</span></p>
+      <p class="stats-goal">目標 <span id="goalLabel">22時間</span></p>
       <div class="progress-bar">
         <div id="progressFill" class="progress-fill"></div>
       </div>
@@ -56,6 +65,8 @@
       <input type="datetime-local" id="stageStartInput">
 
       <p class="stage-progress" id="stageProgress"></p>
+      <div id="stageDots" class="stage-dots"></div>
+      <p id="stageDeficit" class="stage-deficit"></p>
       <p class="stage-estimate" id="stageEstimate"></p>
 
       <button id="replaceBtn" class="replace-btn">このマウスピースを交換した</button>
@@ -77,6 +88,13 @@
 
       <label class="settings-label" for="totalAlignersInput">合計枚数（任意・あとで変更可）</label>
       <input type="number" id="totalAlignersInput" min="1" step="1" placeholder="未設定でもOK">
+
+      <label class="settings-label">外し時間アラート（分、0で無効）</label>
+      <input type="number" id="alertInput" min="0" step="5" placeholder="例：60">
+      <div class="notif-row">
+        <button id="notifBtn" class="notif-btn">通知を有効にする</button>
+        <span id="notifStatus" class="notif-status"></span>
+      </div>
 
       <button id="resetBtn" class="reset-btn">データを初期化する</button>
     </section>

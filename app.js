@@ -5,6 +5,7 @@ const STORAGE_KEYS = {
   totalAligners: 'kyousei_totalAligners',
   undoStack: 'kyousei_undoStack',
   overrides: 'kyousei_dayOverrides',
+  alertMinutes: 'kyousei_alertMinutes',
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -35,8 +36,15 @@ const el = {
   replaceBtn: document.getElementById('replaceBtn'),
   stageChecklist: document.getElementById('stageChecklist'),
   totalAlignersInput: document.getElementById('totalAlignersInput'),
+  ringFill: document.getElementById('ringFill'),
+  stageDots: document.getElementById('stageDots'),
+  stageDeficit: document.getElementById('stageDeficit'),
   undoBtn: document.getElementById('undoBtn'),
   resetBtn: document.getElementById('resetBtn'),
+  wearAlert: document.getElementById('wearAlert'),
+  alertInput: document.getElementById('alertInput'),
+  notifBtn: document.getElementById('notifBtn'),
+  notifStatus: document.getElementById('notifStatus'),
 };
 
 function loadEvents() {
@@ -95,6 +103,15 @@ function loadOverrides() {
 
 function saveOverrides(value) {
   localStorage.setItem(STORAGE_KEYS.overrides, JSON.stringify(value));
+}
+
+function loadAlertMinutes() {
+  const raw = localStorage.getItem(STORAGE_KEYS.alertMinutes);
+  return raw !== null ? Number(raw) : 60;
+}
+
+function saveAlertMinutes(value) {
+  localStorage.setItem(STORAGE_KEYS.alertMinutes, String(value));
 }
 
 function startOfDay(date) {
@@ -186,6 +203,47 @@ function stageProgress(stage, now) {
   return { met, missed, total: days.length, ready, estimatedTs };
 }
 
+// ステージ内の全経過日の累計不足時間(ms)を返す
+function getStageCumulativeDeficit(stage, now) {
+  const goalMs = goalHours * 60 * 60 * 1000;
+  const days = fullDayStarts(stage.start, now);
+  let deficit = 0;
+  days.forEach((dayStart) => {
+    const worn = getDayWornMs(dayStart, now);
+    if (worn < goalMs) deficit += goalMs - worn;
+  });
+  return deficit;
+}
+
+function renderStageDots(stage, now) {
+  el.stageDots.innerHTML = '';
+  const goalMs = goalHours * 60 * 60 * 1000;
+  const days = fullDayStarts(stage.start, now);
+
+  for (let i = 0; i < REQUIRED_DAYS; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'stage-dot';
+
+    if (i < days.length) {
+      const wornMs = getDayWornMs(days[i], now);
+      if (wornMs >= goalMs) {
+        dot.classList.add('met');
+        dot.title = `${formatDate(days[i])}: ✓ 達成`;
+      } else {
+        dot.classList.add('missed');
+        dot.title = `${formatDate(days[i])}: 不足 ${formatDuration(goalMs - wornMs)}`;
+      }
+    } else if (i === days.length) {
+      dot.classList.add('today');
+      dot.title = '今日（進行中）';
+    } else {
+      dot.classList.add('future');
+    }
+
+    el.stageDots.appendChild(dot);
+  }
+}
+
 function formatDuration(ms) {
   const totalMin = Math.max(0, Math.floor(ms / 60000));
   const h = Math.floor(totalMin / 60);
@@ -200,6 +258,8 @@ let stages = loadStages();
 let totalAligners = loadTotalAligners();
 let undoStack = loadUndoStack();
 let overrides = loadOverrides();
+let alertMinutes = loadAlertMinutes();
+let lastAlertTs = 0; // メモリのみ（ページ再読込でリセット）
 
 // 既存ユーザー向け：装着ログはあるがステージ未設定の場合、初回ログを1枚目の開始とする
 if (stages.length === 0 && events.length > 0) {
@@ -261,6 +321,61 @@ function resetAll() {
   render();
 }
 
+function notifPermissionLabel() {
+  if (!('Notification' in window)) return '（この環境では通知非対応）';
+  if (Notification.permission === 'granted') return '✅ 通知許可済み';
+  if (Notification.permission === 'denied') return '❌ ブロック済み（ブラウザ設定から変更してください）';
+  return '未許可';
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  Notification.requestPermission().then(() => {
+    el.notifStatus.textContent = notifPermissionLabel();
+  });
+}
+
+function fireNotification(offDurationMs) {
+  if (navigator.vibrate) navigator.vibrate([300, 100, 300]);
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('マウスピース管理', {
+      body: `${formatDuration(offDurationMs)}外しています。そろそろ着けましょう！`,
+      icon: 'icon.svg',
+    });
+  }
+}
+
+// 外している時間がアラート設定値を超えたら通知（クールタイム：設定値と同じ間隔）
+function checkWearAlert(now) {
+  const state = currentState();
+
+  if (state !== 'off') {
+    lastAlertTs = 0;
+    el.wearAlert.classList.add('hidden');
+    el.wearAlert.textContent = '';
+    return;
+  }
+
+  const lastOffEvent = events[events.length - 1];
+  if (!lastOffEvent) return;
+  const offMs = now - lastOffEvent.ts;
+  const alertMs = alertMinutes > 0 ? alertMinutes * 60 * 1000 : 0;
+
+  if (alertMs > 0 && offMs >= alertMs) {
+    el.wearAlert.classList.remove('hidden');
+    el.wearAlert.textContent = `⚠️ ${formatDuration(offMs)}外しています！そろそろ着けましょう`;
+
+    const cooldown = alertMs;
+    if (now - lastAlertTs >= cooldown) {
+      lastAlertTs = now;
+      fireNotification(offMs);
+    }
+  } else {
+    el.wearAlert.classList.add('hidden');
+    el.wearAlert.textContent = '';
+  }
+}
+
 function currentState() {
   if (events.length === 0) return null;
   return events[events.length - 1].type;
@@ -284,6 +399,7 @@ function render() {
   // トグルボタン
   const isOn = state === 'on';
   el.toggleBtn.classList.toggle('off-state', !isOn);
+  el.toggleBtn.classList.toggle('on-state', isOn);
   el.toggleIcon.textContent = isOn ? '🦷' : '✋';
   el.toggleState.textContent = isOn ? '装着中' : '外している';
   const lastTs = events[events.length - 1].ts;
@@ -296,20 +412,33 @@ function render() {
   el.goalLabel.textContent = `${goalHours}時間`;
 
   const goalMs = goalHours * 60 * 60 * 1000;
+  const goalMet = wornMs >= goalMs;
   const pct = Math.min(100, (wornMs / goalMs) * 100);
   el.progressFill.style.width = `${pct}%`;
+  el.progressFill.classList.toggle('done', goalMet);
 
-  if (wornMs >= goalMs) {
-    el.statusMessage.textContent = '今日の目標を達成しました！';
+  // 円形プログレスリング
+  const circumference = 691.2;
+  el.ringFill.style.strokeDashoffset = circumference * (1 - pct / 100);
+  el.ringFill.classList.toggle('done', goalMet);
+
+  const remMs = goalMs - wornMs;
+  if (goalMet) {
+    el.statusMessage.textContent = '今日の目標を達成しました！🎉';
+    el.statusMessage.className = 'status-message achieved';
   } else if (!isOn) {
-    el.statusMessage.textContent = 'そろそろ着けましょう';
+    el.statusMessage.textContent = `不足 ${formatDuration(remMs)} — そろそろ着けましょう`;
+    el.statusMessage.className = 'status-message deficit';
   } else {
-    el.statusMessage.textContent = `あと${formatDuration(goalMs - wornMs)}`;
+    el.statusMessage.textContent = `あと${formatDuration(remMs)}で達成`;
+    el.statusMessage.className = 'status-message deficit';
   }
 
   renderHistory(now);
   renderStage(now);
   renderChecklist();
+  checkWearAlert(now);
+  el.notifStatus.textContent = notifPermissionLabel();
 }
 
 function renderStage(now) {
@@ -326,6 +455,17 @@ function renderStage(now) {
   el.stageProgress.textContent =
     `${progress.met}/${REQUIRED_DAYS}日達成` +
     (progress.missed > 0 ? `（未達成${progress.missed}日）` : '');
+
+  renderStageDots(stage, now);
+
+  const deficit = getStageCumulativeDeficit(stage, now);
+  if (deficit > 0) {
+    el.stageDeficit.textContent = `ステージ累計不足: ${formatDuration(deficit)}`;
+    el.stageDeficit.className = 'stage-deficit has-deficit';
+  } else {
+    el.stageDeficit.textContent = progress.total > 0 ? '不足なし ✓' : '';
+    el.stageDeficit.className = 'stage-deficit';
+  }
 
   el.stageEstimate.textContent = progress.ready
     ? `交換目安日: 本日（${formatDate(progress.estimatedTs)}）`
@@ -431,6 +571,20 @@ function renderHistory(now) {
     valueWrap.appendChild(input);
     valueWrap.appendChild(unitSpan);
 
+    // 過去日のみバッジ表示（今日は進行中のため除外）
+    if (i > 0) {
+      const badge = document.createElement('span');
+      if (wornMs >= goalMs) {
+        badge.className = 'history-badge ok';
+        badge.textContent = '✓';
+      } else {
+        const defMs = goalMs - wornMs;
+        badge.className = 'history-badge miss';
+        badge.textContent = `−${formatDuration(defMs)}`;
+      }
+      valueWrap.appendChild(badge);
+    }
+
     li.appendChild(dateSpan);
     li.appendChild(valueWrap);
     el.historyList.appendChild(li);
@@ -506,6 +660,17 @@ el.goalInput.addEventListener('change', () => {
     render();
   }
 });
+
+el.alertInput.value = alertMinutes > 0 ? alertMinutes : '';
+el.alertInput.addEventListener('change', () => {
+  const val = Number(el.alertInput.value);
+  alertMinutes = val >= 0 ? val : 60;
+  saveAlertMinutes(alertMinutes);
+  lastAlertTs = 0;
+  render();
+});
+
+el.notifBtn.addEventListener('click', requestNotifPermission);
 
 render();
 setInterval(render, 30000);
