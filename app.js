@@ -6,10 +6,10 @@ const STORAGE_KEYS = {
   undoStack: 'kyousei_undoStack',
   overrides: 'kyousei_dayOverrides',
   alertMinutes: 'kyousei_alertMinutes',
+  replaceCycle: 'kyousei_replaceCycle',
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const REQUIRED_DAYS = 7;
 const UNDO_LIMIT = 20;
 const HISTORY_DAYS = 10;
 
@@ -27,6 +27,9 @@ const el = {
   progressFill: document.getElementById('progressFill'),
   statusMessage: document.getElementById('statusMessage'),
   historyList: document.getElementById('historyList'),
+  historyLabel: document.getElementById('historyLabel'),
+  historyFrom: document.getElementById('historyFrom'),
+  historyTo: document.getElementById('historyTo'),
   goalInput: document.getElementById('goalInput'),
   stageAlert: document.getElementById('stageAlert'),
   stageNumber: document.getElementById('stageNumber'),
@@ -53,6 +56,7 @@ const el = {
   alertInput: document.getElementById('alertInput'),
   notifBtn: document.getElementById('notifBtn'),
   notifStatus: document.getElementById('notifStatus'),
+  cycleBtns: document.querySelectorAll('.cycle-btn'),
 };
 
 function loadEvents() {
@@ -120,6 +124,23 @@ function loadAlertMinutes() {
 
 function saveAlertMinutes(value) {
   localStorage.setItem(STORAGE_KEYS.alertMinutes, String(value));
+}
+
+function loadReplaceCycle() {
+  const v = Number(localStorage.getItem(STORAGE_KEYS.replaceCycle));
+  return [7, 8, 9, 10].includes(v) ? v : 7;
+}
+
+function saveReplaceCycle(v) {
+  localStorage.setItem(STORAGE_KEYS.replaceCycle, String(v));
+}
+
+let replaceCycle = loadReplaceCycle();
+
+function syncCycleBtns() {
+  el.cycleBtns.forEach(btn => {
+    btn.classList.toggle('active', Number(btn.dataset.days) === replaceCycle);
+  });
 }
 
 function startOfDay(date) {
@@ -204,9 +225,9 @@ function stageProgress(stage, now) {
     const wornMs = getDayWornMs(dayStart, now);
     if (wornMs >= goalMs) met++; else missed++;
   });
-  const ready = met >= REQUIRED_DAYS;
+  const ready = met >= replaceCycle;
   // 残り日数分、毎日目標を達成できた場合の交換目安日（達成済みなら本日）
-  const remaining = Math.max(0, REQUIRED_DAYS - met);
+  const remaining = Math.max(0, replaceCycle - met);
   const estimatedTs = startOfDay(now) + remaining * DAY_MS;
   return { met, missed, total: days.length, ready, estimatedTs };
 }
@@ -228,7 +249,7 @@ function renderStageDots(stage, now) {
   const goalMs = goalHours * 60 * 60 * 1000;
   const days = fullDayStarts(stage.start, now);
 
-  for (let i = 0; i < REQUIRED_DAYS; i++) {
+  for (let i = 0; i < replaceCycle; i++) {
     const dot = document.createElement('span');
     dot.className = 'stage-dot';
 
@@ -331,8 +352,8 @@ function resetAll() {
 
 function notifPermissionLabel() {
   if (!('Notification' in window)) return '（この環境では通知非対応）';
-  if (Notification.permission === 'granted') return '✅ 通知許可済み';
-  if (Notification.permission === 'denied') return '❌ ブロック済み（ブラウザ設定から変更してください）';
+  if (Notification.permission === 'granted') return '✓ 通知許可済み';
+  if (Notification.permission === 'denied') return 'ブロック済み（ブラウザ設定から変更してください）';
   return '未許可';
 }
 
@@ -371,7 +392,7 @@ function checkWearAlert(now) {
 
   if (alertMs > 0 && offMs >= alertMs) {
     el.wearAlert.classList.remove('hidden');
-    el.wearAlert.textContent = `⚠️ ${formatDuration(offMs)}外しています！そろそろ着けましょう`;
+    el.wearAlert.textContent = `${formatDuration(offMs)}外しています。そろそろ着けましょう`;
 
     const cooldown = alertMs;
     if (now - lastAlertTs >= cooldown) {
@@ -408,7 +429,7 @@ function render() {
   const isOn = state === 'on';
   el.toggleBtn.classList.toggle('off-state', !isOn);
   el.toggleBtn.classList.toggle('on-state', isOn);
-  el.toggleIcon.textContent = isOn ? '🦷' : '✋';
+  el.toggleIcon.classList.toggle('off', !isOn);
   el.toggleState.textContent = isOn ? '装着中' : '外している';
   const lastTs = events[events.length - 1].ts;
   el.toggleElapsed.textContent = `${formatDuration(now - lastTs)}経過`;
@@ -461,7 +482,7 @@ function renderStage(now) {
 
   const progress = stageProgress(stage, now);
   el.stageProgress.textContent =
-    `${progress.met}/${REQUIRED_DAYS}日達成` +
+    `${progress.met}/${replaceCycle}日達成` +
     (progress.missed > 0 ? `（未達成${progress.missed}日）` : '');
 
   renderStageDots(stage, now);
@@ -482,10 +503,10 @@ function renderStage(now) {
   el.stageAlert.classList.remove('hidden', 'ready', 'extended');
   if (progress.ready) {
     el.stageAlert.classList.add('ready');
-    el.stageAlert.textContent = '✅ 交換予定日です。新しいマウスピースに交換しましょう';
+    el.stageAlert.textContent = '交換予定日です。新しいマウスピースに交換しましょう';
   } else if (progress.missed > 0) {
     el.stageAlert.classList.add('extended');
-    el.stageAlert.textContent = `⚠️ 目標未達成の日が${progress.missed}日あり、交換が延長になっています`;
+    el.stageAlert.textContent = `目標未達成の日が${progress.missed}日あり、交換が延長になっています`;
   } else {
     el.stageAlert.classList.add('hidden');
     el.stageAlert.textContent = '';
@@ -511,7 +532,8 @@ function renderChecklist() {
 
     if (stage && stage.end) {
       li.classList.add('done');
-      icon.textContent = '✅';
+      icon.textContent = '✓';
+      icon.classList.add('done');
       range.textContent = `${formatDate(stage.start)}〜${formatDate(stage.end)}`;
     } else if (stage) {
       li.classList.add('current');
@@ -534,19 +556,36 @@ function renderHistory(now) {
   el.historyList.innerHTML = '';
   const goalMs = goalHours * 60 * 60 * 1000;
   const todayStart = startOfDay(now);
+  const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
 
-  for (let i = 0; i < HISTORY_DAYS; i++) {
-    const dayStart = todayStart - i * DAY_MS;
+  const fromVal = el.historyFrom.value;
+  const toVal = el.historyTo.value;
+  let days = [];
+
+  if (fromVal) {
+    const fromTs = startOfDay(fromVal);
+    const toTs = toVal ? startOfDay(toVal) : todayStart;
+    const count = Math.min(Math.max(Math.round((toTs - fromTs) / DAY_MS) + 1, 1), 180);
+    for (let i = 0; i < count; i++) days.push(toTs - i * DAY_MS);
+    const fromDisp = fromVal.slice(5).replace('-', '/');
+    const toDisp = (toVal || dateKey(todayStart)).slice(5).replace('-', '/');
+    el.historyLabel.textContent = `${fromDisp} 〜 ${toDisp}`;
+  } else {
+    for (let i = 0; i < HISTORY_DAYS; i++) days.push(todayStart - i * DAY_MS);
+    el.historyLabel.textContent = '直近10日間';
+  }
+
+  days.forEach((dayStart) => {
     const wornMs = getDayWornMs(dayStart, now);
-
     const d = new Date(dayStart);
-    const label = i === 0 ? '今日' : `${d.getMonth() + 1}/${d.getDate()}`;
+    const isToday = dayStart === todayStart;
+    const label = isToday ? '今日' : `${d.getMonth() + 1}/${d.getDate()}（${dayNames[d.getDay()]}）`;
 
     const li = document.createElement('li');
     if (wornMs >= goalMs) li.classList.add('goal-met');
 
     const dateSpan = document.createElement('span');
-    dateSpan.className = 'history-date';
+    dateSpan.className = isToday ? 'history-date today' : 'history-date';
     dateSpan.textContent = label;
 
     const valueWrap = document.createElement('span');
@@ -579,8 +618,7 @@ function renderHistory(now) {
     valueWrap.appendChild(input);
     valueWrap.appendChild(unitSpan);
 
-    // 過去日のみバッジ表示（今日は進行中のため除外）
-    if (i > 0) {
+    if (!isToday) {
       const badge = document.createElement('span');
       if (wornMs >= goalMs) {
         badge.className = 'history-badge ok';
@@ -596,7 +634,7 @@ function renderHistory(now) {
     li.appendChild(dateSpan);
     li.appendChild(valueWrap);
     el.historyList.appendChild(li);
-  }
+  });
 }
 
 function toggle() {
@@ -705,6 +743,24 @@ el.alertInput.addEventListener('change', () => {
 
 el.notifBtn.addEventListener('click', requestNotifPermission);
 
+el.cycleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    replaceCycle = Number(btn.dataset.days);
+    saveReplaceCycle(replaceCycle);
+    syncCycleBtns();
+    render();
+  });
+});
+
+el.historyFrom.addEventListener('change', () => {
+  if (el.historyFrom.value && !el.historyTo.value) {
+    el.historyTo.value = dateKey(Date.now());
+  }
+  render();
+});
+el.historyTo.addEventListener('change', render);
+
+syncCycleBtns();
 render();
 setInterval(render, 30000);
 
