@@ -515,9 +515,9 @@ function renderStage(now) {
     el.stageDeficit.className = 'stage-deficit';
   }
 
-  el.stageEstimate.textContent = progress.ready
-    ? `交換目安日: 本日（${formatDate(progress.estimatedTs)}）`
-    : `交換目安日: ${formatDate(progress.estimatedTs)}（このペースで目標を達成できた場合）`;
+  el.stageEstimate.innerHTML = progress.ready
+    ? `<span class="stage-estimate-label">交換目安日:</span> <span class="stage-estimate-date">本日（${formatDate(progress.estimatedTs)}）</span>`
+    : `<span class="stage-estimate-label">交換目安日:</span><br><span class="stage-estimate-date">${formatDate(progress.estimatedTs)}</span><br><span class="stage-estimate-note">（このペースで目標を達成できた場合）</span>`;
 
   el.stageAlert.classList.remove('hidden', 'ready', 'extended');
   if (progress.ready) {
