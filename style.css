@@ -888,7 +888,15 @@ main {
 
 .stage-estimate {
   margin: 0 0 14px;
+  padding: 10px 14px;
   line-height: 1.6;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px solid rgba(63, 55, 43, 0.1);
+  background: var(--bg);
+  box-shadow:
+    inset 2px 2px 5px rgba(63, 55, 43, 0.08),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.6);
 }
 
 .stage-estimate-label {
