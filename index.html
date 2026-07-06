@@ -17,6 +17,8 @@
 </head>
 <body>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 <header class="app-header">
   <button id="undoBtn" class="undo-btn hidden">↩ 元に戻す</button>
   <h1><svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 5c-5.5 0-10 4.6-10 10.4 0 4.1 1.5 7 2.7 9.9 1.1 2.6 2 5.8 2.5 10.3.3 2.9 1 6.4 3.6 6.4 2.4 0 3.1-2.7 3.5-5.4.5-3.5 1.6-8 4.7-8s4.2 4.5 4.7 8c.4 2.7 1.1 5.4 3.5 5.4 2.6 0 3.3-3.5 3.6-6.4.5-4.5 1.4-7.7 2.5-10.3C37.5 22.4 39 19.5 39 15.4 39 9.6 34.5 5 29 5c-2.9 0-4.4 1.5-7 1.5S17.9 5 15 5z"/></svg>マウスピース管理</h1>
@@ -142,6 +144,14 @@
         <button class="cycle-btn" data-days="9">9日</button>
         <button class="cycle-btn" data-days="10">10日</button>
       </div>
+    </div>
+
+    <div class="card">
+      <p class="settings-section-title">過去のマウスピースを登録</p>
+      <p class="settings-hint">すでに交換済みのマウスピースをまとめて登録できます。装着時間の記録は残りませんが、交換回数・累計枚数には反映されます。</p>
+      <div id="pastStagesList" class="past-stage-list"></div>
+      <button id="addPastStageBtn" class="add-row-btn" type="button">＋ 行を追加</button>
+      <button id="savePastStagesBtn" class="notif-btn past-stage-save" type="button">登録する</button>
     </div>
 
     <div class="card">

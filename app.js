@@ -57,7 +57,19 @@ const el = {
   notifBtn: document.getElementById('notifBtn'),
   notifStatus: document.getElementById('notifStatus'),
   cycleBtns: document.querySelectorAll('.cycle-btn'),
+  pastStagesList: document.getElementById('pastStagesList'),
+  addPastStageBtn: document.getElementById('addPastStageBtn'),
+  savePastStagesBtn: document.getElementById('savePastStagesBtn'),
+  toast: document.getElementById('toast'),
 };
+
+let toastTimer = null;
+function showToast(message) {
+  el.toast.textContent = message;
+  el.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.toast.classList.remove('show'), 1800);
+}
 
 function loadEvents() {
   const raw = localStorage.getItem(STORAGE_KEYS.events);
@@ -216,6 +228,20 @@ function fullDayStarts(stageStart, now) {
   return days;
 }
 
+// ステージ全体で必要な装着時間（交換周期 × 1日の目標時間）
+function getStageRequiredMs() {
+  return replaceCycle * goalHours * 60 * 60 * 1000;
+}
+
+// ステージ内の経過済み「丸1日」の装着時間を合計する（多く装着した日は不足の穴埋めになる）
+function getStageWornTotalMs(stage, now) {
+  const end = stage.end || now;
+  const days = fullDayStarts(stage.start, end);
+  let total = 0;
+  days.forEach((dayStart) => { total += getDayWornMs(dayStart, now); });
+  return total;
+}
+
 function stageProgress(stage, now) {
   const goalMs = goalHours * 60 * 60 * 1000;
   const days = fullDayStarts(stage.start, now);
@@ -225,23 +251,18 @@ function stageProgress(stage, now) {
     const wornMs = getDayWornMs(dayStart, now);
     if (wornMs >= goalMs) met++; else missed++;
   });
-  const ready = met >= replaceCycle;
-  // 残り日数分、毎日目標を達成できた場合の交換目安日（達成済みなら本日）
-  const remaining = Math.max(0, replaceCycle - met);
-  const estimatedTs = startOfDay(now) + remaining * DAY_MS;
-  return { met, missed, total: days.length, ready, estimatedTs };
-}
 
-// ステージ内の全経過日の累計不足時間(ms)を返す
-function getStageCumulativeDeficit(stage, now) {
-  const goalMs = goalHours * 60 * 60 * 1000;
-  const days = fullDayStarts(stage.start, now);
-  let deficit = 0;
-  days.forEach((dayStart) => {
-    const worn = getDayWornMs(dayStart, now);
-    if (worn < goalMs) deficit += goalMs - worn;
-  });
-  return deficit;
+  const requiredMs = getStageRequiredMs();
+  const wornTotalMs = getStageWornTotalMs(stage, now);
+  const deficitMs = Math.max(0, requiredMs - wornTotalMs);
+  const ready = deficitMs <= 0;
+  // 累計不足を今のペース（1日の目標時間）で埋めた場合の交換目安日
+  const remainingDays = ready ? 0 : Math.ceil(deficitMs / goalMs);
+  const estimatedTs = startOfDay(now) + remainingDays * DAY_MS;
+  // 交換周期の日数を経過してもなお不足が残っている＝延長中
+  const extended = !ready && days.length >= replaceCycle;
+
+  return { met, missed, total: days.length, ready, extended, estimatedTs, requiredMs, wornTotalMs, deficitMs };
 }
 
 function renderStageDots(stage, now) {
@@ -482,17 +503,15 @@ function renderStage(now) {
 
   const progress = stageProgress(stage, now);
   el.stageProgress.textContent =
-    `${progress.met}/${replaceCycle}日達成` +
-    (progress.missed > 0 ? `（未達成${progress.missed}日）` : '');
+    `累計 ${formatDuration(progress.wornTotalMs)} / ${formatDuration(progress.requiredMs)}`;
 
   renderStageDots(stage, now);
 
-  const deficit = getStageCumulativeDeficit(stage, now);
-  if (deficit > 0) {
-    el.stageDeficit.textContent = `ステージ累計不足: ${formatDuration(deficit)}`;
+  if (progress.deficitMs > 0) {
+    el.stageDeficit.textContent = `ステージ累計不足: ${formatDuration(progress.deficitMs)}`;
     el.stageDeficit.className = 'stage-deficit has-deficit';
   } else {
-    el.stageDeficit.textContent = progress.total > 0 ? '不足なし ✓' : '';
+    el.stageDeficit.textContent = progress.total > 0 ? '不足なし ✓（クリア）' : '';
     el.stageDeficit.className = 'stage-deficit';
   }
 
@@ -503,53 +522,168 @@ function renderStage(now) {
   el.stageAlert.classList.remove('hidden', 'ready', 'extended');
   if (progress.ready) {
     el.stageAlert.classList.add('ready');
-    el.stageAlert.textContent = '交換予定日です。新しいマウスピースに交換しましょう';
-  } else if (progress.missed > 0) {
+    el.stageAlert.textContent = '不足時間をクリアしました。新しいマウスピースに交換しましょう';
+  } else if (progress.extended) {
     el.stageAlert.classList.add('extended');
-    el.stageAlert.textContent = `目標未達成の日が${progress.missed}日あり、交換が延長になっています`;
+    el.stageAlert.textContent = `累計不足時間が残っており、交換が延長になっています（残り${formatDuration(progress.deficitMs)}）`;
   } else {
     el.stageAlert.classList.add('hidden');
     el.stageAlert.textContent = '';
   }
 }
 
+// 完了・進行中ステージの内訳（日別装着時間 or 手動登録の期間のみ）を組み立てる
+function buildStageBreakdown(stage, now) {
+  if (stage.manual) {
+    const daysCount = Math.round((stage.end - stage.start) / DAY_MS);
+    return { manual: true, daysCount };
+  }
+  const goalMs = goalHours * 60 * 60 * 1000;
+  const end = stage.end || now;
+  const days = fullDayStarts(stage.start, end);
+  const rows = days.map((dayStart) => {
+    const wornMs = getDayWornMs(dayStart, now);
+    return { label: formatDate(dayStart), wornMs, met: wornMs >= goalMs };
+  });
+  return { manual: false, rows };
+}
+
+const CHECKLIST_VISIBLE_COUNT = 4;
+
+function buildChecklistItem(i, stage, now) {
+  const li = document.createElement('li');
+
+  const row = document.createElement('div');
+  row.className = 'checklist-row';
+
+  const icon = document.createElement('span');
+  icon.className = 'checklist-icon';
+
+  const label = document.createElement('span');
+  label.textContent = `${i + 1}枚目`;
+
+  const range = document.createElement('span');
+  range.className = 'checklist-range';
+
+  if (stage && stage.end) {
+    li.classList.add('done');
+    icon.textContent = '✓';
+    icon.classList.add('done');
+    range.textContent = `${formatDate(stage.start)}〜${formatDate(stage.end)}`;
+  } else if (stage) {
+    li.classList.add('current');
+    icon.textContent = '●';
+    range.textContent = `${formatDate(stage.start)}〜（進行中）`;
+  } else {
+    li.classList.add('future');
+    icon.textContent = '○';
+    range.textContent = '未着手';
+  }
+
+  row.appendChild(icon);
+  row.appendChild(label);
+  row.appendChild(range);
+  li.appendChild(row);
+
+  if (stage) {
+    li.classList.add('has-detail');
+    const detail = document.createElement('div');
+    detail.className = 'checklist-detail';
+
+    const breakdown = buildStageBreakdown(stage, now);
+    if (breakdown.manual) {
+      const note = document.createElement('p');
+      note.className = 'checklist-detail-note';
+      note.textContent = `手動登録（${breakdown.daysCount}日間）。このアプリを使う前の記録のため、日ごとの装着時間はありません。`;
+      detail.appendChild(note);
+    } else if (breakdown.rows.length === 0) {
+      const note = document.createElement('p');
+      note.className = 'checklist-detail-note';
+      note.textContent = 'まだ丸1日分のデータがありません。';
+      detail.appendChild(note);
+    } else {
+      const list = document.createElement('ul');
+      list.className = 'checklist-detail-list';
+      breakdown.rows.forEach((row2) => {
+        const item = document.createElement('li');
+        item.classList.add(row2.met ? 'met' : 'missed');
+        const dateSpan = document.createElement('span');
+        dateSpan.textContent = row2.label;
+        const durSpan = document.createElement('span');
+        durSpan.textContent = `${formatDuration(row2.wornMs)}${row2.met ? ' ✓' : ''}`;
+        item.appendChild(dateSpan);
+        item.appendChild(durSpan);
+        list.appendChild(item);
+      });
+      detail.appendChild(list);
+    }
+
+    li.appendChild(detail);
+    row.addEventListener('click', () => li.classList.toggle('open'));
+  }
+
+  return li;
+}
+
+function openPastStagesRegister() {
+  el.settingsPage.classList.add('open');
+  setTimeout(() => {
+    el.pastStagesList.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 300);
+}
+
 function renderChecklist() {
   el.stageChecklist.innerHTML = '';
   const slots = Math.max(stages.length, totalAligners || 0);
+  const now = Date.now();
 
-  for (let i = 0; i < slots; i++) {
-    const stage = stages[i];
-    const li = document.createElement('li');
+  // 実際のステージは新しい順、未着手の枠はその後ろに番号順で並べる
+  const order = [];
+  for (let i = stages.length - 1; i >= 0; i--) order.push(i);
+  for (let i = stages.length; i < slots; i++) order.push(i);
 
-    const icon = document.createElement('span');
-    icon.className = 'checklist-icon';
+  const hiddenGroup = document.createElement('ul');
+  hiddenGroup.className = 'checklist-hidden-group';
+  let hiddenCount = 0;
 
-    const label = document.createElement('span');
-    label.textContent = `${i + 1}枚目`;
-
-    const range = document.createElement('span');
-    range.className = 'checklist-range';
-
-    if (stage && stage.end) {
-      li.classList.add('done');
-      icon.textContent = '✓';
-      icon.classList.add('done');
-      range.textContent = `${formatDate(stage.start)}〜${formatDate(stage.end)}`;
-    } else if (stage) {
-      li.classList.add('current');
-      icon.textContent = '●';
-      range.textContent = `${formatDate(stage.start)}〜（進行中）`;
+  order.forEach((i, pos) => {
+    const li = buildChecklistItem(i, stages[i], now);
+    if (pos < CHECKLIST_VISIBLE_COUNT) {
+      el.stageChecklist.appendChild(li);
     } else {
-      li.classList.add('future');
-      icon.textContent = '○';
-      range.textContent = '未着手';
+      hiddenGroup.appendChild(li);
+      hiddenCount++;
     }
+  });
 
-    li.appendChild(icon);
-    li.appendChild(label);
-    li.appendChild(range);
-    el.stageChecklist.appendChild(li);
+  if (hiddenCount > 0) {
+    const moreLi = document.createElement('li');
+    moreLi.className = 'checklist-more-item';
+
+    const moreBtn = document.createElement('button');
+    moreBtn.type = 'button';
+    moreBtn.className = 'checklist-more-btn';
+    const openLabel = `過去の記録を見る（${hiddenCount}件）`;
+    moreBtn.textContent = openLabel;
+    moreBtn.addEventListener('click', () => {
+      const open = moreLi.classList.toggle('open');
+      moreBtn.textContent = open ? '閉じる' : openLabel;
+    });
+
+    moreLi.appendChild(moreBtn);
+    moreLi.appendChild(hiddenGroup);
+    el.stageChecklist.appendChild(moreLi);
   }
+
+  const registerLi = document.createElement('li');
+  registerLi.className = 'checklist-register-item';
+  const registerBtn = document.createElement('button');
+  registerBtn.type = 'button';
+  registerBtn.className = 'checklist-register-link';
+  registerBtn.textContent = '以前のマウスピースを登録する場合';
+  registerBtn.addEventListener('click', openPastStagesRegister);
+  registerLi.appendChild(registerBtn);
+  el.stageChecklist.appendChild(registerLi);
 }
 
 function renderHistory(now) {
@@ -609,6 +743,7 @@ function renderHistory(now) {
       }
       saveOverrides(overrides);
       render();
+      showToast('保存しました');
     });
 
     const unitSpan = document.createElement('span');
@@ -669,6 +804,87 @@ function replaceStage() {
   render();
 }
 
+function addPastStageRow() {
+  const row = document.createElement('div');
+  row.className = 'past-stage-row';
+
+  const startInput = document.createElement('input');
+  startInput.type = 'date';
+  startInput.className = 'past-stage-start';
+
+  const sep = document.createElement('span');
+  sep.className = 'filter-sep';
+  sep.textContent = '〜';
+
+  const endInput = document.createElement('input');
+  endInput.type = 'date';
+  endInput.className = 'past-stage-end';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'past-stage-remove';
+  removeBtn.textContent = '×';
+  removeBtn.addEventListener('click', () => {
+    row.remove();
+    if (!el.pastStagesList.querySelector('.past-stage-row')) addPastStageRow();
+  });
+
+  row.appendChild(startInput);
+  row.appendChild(sep);
+  row.appendChild(endInput);
+  row.appendChild(removeBtn);
+  el.pastStagesList.appendChild(row);
+}
+
+function savePastStages() {
+  const rows = [...el.pastStagesList.querySelectorAll('.past-stage-row')];
+  const entries = [];
+
+  for (const row of rows) {
+    const s = row.querySelector('.past-stage-start').value;
+    const e = row.querySelector('.past-stage-end').value;
+    if (!s && !e) continue;
+    if (!s || !e) {
+      alert('開始日と終了日の両方を入力してください');
+      return;
+    }
+    const startTs = startOfDay(s);
+    const endTs = startOfDay(e) + DAY_MS;
+    if (startTs >= endTs) {
+      alert('開始日は終了日より前の日付にしてください');
+      return;
+    }
+    entries.push({ start: startTs, end: endTs, manual: true });
+  }
+
+  if (entries.length === 0) {
+    alert('開始日と終了日を入力してください');
+    return;
+  }
+
+  entries.sort((a, b) => a.start - b.start);
+  for (let i = 0; i < entries.length - 1; i++) {
+    if (entries[i].end > entries[i + 1].start) {
+      alert('登録するマウスピースの期間が重複しています');
+      return;
+    }
+  }
+
+  const firstExistingStart = stages.length ? stages[0].start : Infinity;
+  if (entries[entries.length - 1].end > firstExistingStart) {
+    alert('既存の記録より後の日付は登録できません。既存の記録の開始日より前の日付にしてください');
+    return;
+  }
+
+  pushUndo();
+  stages = [...entries, ...stages];
+  saveStages(stages);
+  el.pastStagesList.innerHTML = '';
+  addPastStageRow();
+  render();
+  alert(`${entries.length}枚のマウスピースを登録しました`);
+}
+
 el.setupOn.addEventListener('click', () => setup('on'));
 el.setupOff.addEventListener('click', () => setup('off'));
 el.toggleBtn.addEventListener('click', toggle);
@@ -709,6 +925,7 @@ el.stageStartInput.addEventListener('change', () => {
     stage.start = ts;
     saveStages(stages);
     render();
+    showToast('開始日時を保存しました');
   }
 });
 
@@ -719,6 +936,7 @@ el.totalAlignersInput.addEventListener('change', () => {
   totalAligners = val ? Number(val) : null;
   saveTotalAligners(totalAligners);
   render();
+  showToast('保存しました');
 });
 
 el.goalInput.value = goalHours;
@@ -729,6 +947,7 @@ el.goalInput.addEventListener('change', () => {
     goalHours = val;
     saveGoalHours(goalHours);
     render();
+    showToast('保存しました');
   }
 });
 
@@ -739,6 +958,7 @@ el.alertInput.addEventListener('change', () => {
   saveAlertMinutes(alertMinutes);
   lastAlertTs = 0;
   render();
+  showToast('保存しました');
 });
 
 el.notifBtn.addEventListener('click', requestNotifPermission);
@@ -749,8 +969,13 @@ el.cycleBtns.forEach(btn => {
     saveReplaceCycle(replaceCycle);
     syncCycleBtns();
     render();
+    showToast(`交換周期を${replaceCycle}日に設定しました`);
   });
 });
+
+el.addPastStageBtn.addEventListener('click', addPastStageRow);
+el.savePastStagesBtn.addEventListener('click', savePastStages);
+addPastStageRow();
 
 el.historyFrom.addEventListener('change', () => {
   if (el.historyFrom.value && !el.historyTo.value) {

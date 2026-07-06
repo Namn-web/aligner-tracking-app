@@ -80,7 +80,7 @@ button { font-family: inherit; }
   justify-content: center;
   gap: 8px;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 700;
   margin: 0;
   color: var(--text);
   letter-spacing: 0.05em;
@@ -579,7 +579,7 @@ main {
 
 .stats-value {
   font-size: 40px;
-  font-weight: 900;
+  font-weight: 500;
   margin: 0 0 2px;
   color: var(--text);
   line-height: 1.1;
@@ -941,16 +941,87 @@ main {
 
 .checklist li {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
   font-size: 14px;
-  padding: 10px 14px;
+  padding: 0;
   border-radius: 14px;
   background: var(--bg);
   box-shadow:
     3px 3px 7px var(--clay-dark),
     -2px -2px 5px var(--clay-light);
+  overflow: hidden;
 }
+
+.checklist-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+.checklist li.has-detail .checklist-row {
+  cursor: pointer;
+}
+
+.checklist-row::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-soft);
+  border-bottom: 2px solid var(--text-soft);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  transition: transform 0.22s ease;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.checklist li.has-detail .checklist-row::after { opacity: 0.7; }
+.checklist li.open .checklist-row::after { transform: rotate(225deg); }
+
+.checklist-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 14px;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.checklist li.open .checklist-detail {
+  max-height: 600px;
+  padding: 0 14px 12px;
+}
+
+.checklist-detail-note {
+  margin: 0 0 8px;
+  line-height: 1.6;
+}
+
+.checklist-detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.checklist-detail-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.55);
+  box-shadow: none;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.checklist-detail-list li.met { color: var(--green-deep); }
+.checklist-detail-list li.missed { color: var(--peach-deep); }
 
 .checklist li.done {
   background: linear-gradient(135deg, #C8F0DC, #D8F5E8);
@@ -967,6 +1038,65 @@ main {
 }
 
 .checklist li.future { color: var(--text-soft); opacity: 0.6; }
+
+/* 過去の記録（5件目以降）の折りたたみ */
+.checklist li.checklist-more-item {
+  background: transparent;
+  box-shadow: none;
+  padding: 2px 0 0;
+}
+
+.checklist-more-btn {
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+}
+
+.checklist-hidden-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, margin-top 0.35s ease;
+}
+
+.checklist li.checklist-more-item.open .checklist-hidden-group {
+  max-height: 4000px;
+  margin-top: 8px;
+}
+
+/* 過去のマウスピース登録リンク */
+.checklist li.checklist-register-item {
+  background: transparent;
+  box-shadow: none;
+  padding: 4px 0 0;
+}
+
+.checklist-register-link {
+  width: 100%;
+  padding: 8px 0 2px;
+  border: none;
+  background: transparent;
+  color: var(--primary-deep);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 .checklist-icon { font-size: 13px; color: var(--text-soft); width: 16px; text-align: center; }
 .checklist-icon.done { color: var(--green-deep); font-weight: 900; }
@@ -1022,6 +1152,74 @@ main {
     inset 1px 1px 0 rgba(255,255,255,0.3);
 }
 
+/* 過去のマウスピース登録 */
+.settings-hint {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  margin: 0 0 14px;
+}
+
+.past-stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.past-stage-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.past-stage-row input[type="date"] {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  box-shadow: var(--clay-pressed);
+}
+
+.past-stage-remove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-soft);
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow:
+    3px 3px 7px var(--clay-dark),
+    -2px -2px 5px var(--clay-light);
+}
+
+.add-row-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--primary-deep);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--clay-pressed);
+  margin-bottom: 10px;
+}
+
+.past-stage-save {
+  width: 100%;
+}
+
 #goalInput,
 #totalAlignersInput,
 #alertInput {
@@ -1063,6 +1261,33 @@ main {
     -2px -2px 6px rgba(255,255,255,0.65),
     inset 1px 1px 3px rgba(255,255,255,0.4);
   transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+/* 保存完了トースト */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 500;
+  background: linear-gradient(145deg, #3A3833, #2A2823);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px 22px;
+  border-radius: 999px;
+  box-shadow:
+    6px 6px 16px rgba(0,0,0,0.28),
+    -3px -3px 10px rgba(255,255,255,0.08);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* モーション低減設定を尊重 */
