@@ -744,22 +744,23 @@ function renderHistory(now) {
     const valueWrap = document.createElement('span');
     valueWrap.className = 'history-value';
 
-    const input = document.createElement('input');
-    input.type = 'number';
+    const input = document.createElement('select');
     input.className = 'history-input';
-    input.min = '0';
-    input.max = '24';
-    input.step = '0.5';
-    input.value = Math.round((wornMs / (60 * 60 * 1000)) * 10) / 10;
+    const rawHours = Math.round((wornMs / (60 * 60 * 1000)) * 10) / 10;
+    const snappedHours = Math.round(rawHours * 2) / 2;
+    for (let step = 0; step <= 48; step++) {
+      const h = step / 2;
+      const opt = document.createElement('option');
+      opt.value = h;
+      opt.textContent = Number.isInteger(h) ? String(h) : h.toFixed(1);
+      if (h === snappedHours) opt.selected = true;
+      input.appendChild(opt);
+    }
     input.addEventListener('change', () => {
       pushUndo();
       const key = dateKey(dayStart);
-      if (input.value === '') {
-        delete overrides[key];
-      } else {
-        const hours = Math.max(0, Math.min(24, Number(input.value)));
-        overrides[key] = Math.round(hours * 60 * 60 * 1000);
-      }
+      const hours = Number(input.value);
+      overrides[key] = Math.round(hours * 60 * 60 * 1000);
       saveOverrides(overrides);
       render();
       showToast('保存しました', { undo: true });
