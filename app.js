@@ -42,7 +42,6 @@ const el = {
   ringFill: document.getElementById('ringFill'),
   stageDots: document.getElementById('stageDots'),
   stageDeficit: document.getElementById('stageDeficit'),
-  undoBtn: document.getElementById('undoBtn'),
   menuBtn: document.getElementById('menuBtn'),
   navMenu: document.getElementById('navMenu'),
   navSettingsBtn: document.getElementById('navSettingsBtn'),
@@ -64,11 +63,31 @@ const el = {
 };
 
 let toastTimer = null;
-function showToast(message) {
-  el.toast.textContent = message;
+function hideToast() {
+  el.toast.classList.remove('show');
+  clearTimeout(toastTimer);
+}
+
+function showToast(message, opts = {}) {
+  el.toast.innerHTML = '';
+
+  const text = document.createElement('span');
+  text.className = 'toast-message';
+  text.textContent = message;
+  el.toast.appendChild(text);
+
+  if (opts.undo) {
+    const undoBtn = document.createElement('button');
+    undoBtn.type = 'button';
+    undoBtn.className = 'toast-undo-btn';
+    undoBtn.textContent = '元に戻す';
+    undoBtn.addEventListener('click', undo);
+    el.toast.appendChild(undoBtn);
+  }
+
   el.toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.toast.classList.remove('show'), 1800);
+  toastTimer = setTimeout(hideToast, opts.undo ? 4500 : 1800);
 }
 
 function loadEvents() {
@@ -351,6 +370,7 @@ function undo() {
   el.goalInput.value = goalHours;
   el.totalAlignersInput.value = totalAligners || '';
   render();
+  showToast('元に戻しました');
 }
 
 function resetAll() {
@@ -369,6 +389,7 @@ function resetAll() {
   el.goalInput.value = goalHours;
   el.totalAlignersInput.value = '';
   render();
+  showToast('データを初期化しました', { undo: true });
 }
 
 function notifPermissionLabel() {
@@ -434,8 +455,6 @@ function currentState() {
 function render() {
   const now = Date.now();
   const state = currentState();
-
-  el.undoBtn.classList.toggle('hidden', undoStack.length === 0);
 
   if (state === null) {
     el.setup.classList.remove('hidden');
@@ -743,7 +762,7 @@ function renderHistory(now) {
       }
       saveOverrides(overrides);
       render();
-      showToast('保存しました');
+      showToast('保存しました', { undo: true });
     });
 
     const unitSpan = document.createElement('span');
@@ -782,6 +801,7 @@ function toggle() {
   events.push({ type: nextType, ts: Date.now() });
   saveEvents(events);
   render();
+  showToast(nextType === 'on' ? '装着中にしました' : '外しました', { undo: true });
 }
 
 function setup(initialType) {
@@ -802,6 +822,7 @@ function replaceStage() {
   stages.push({ start: now, end: null });
   saveStages(stages);
   render();
+  showToast('マウスピースを交換しました', { undo: true });
 }
 
 function addPastStageRow() {
@@ -882,14 +903,13 @@ function savePastStages() {
   el.pastStagesList.innerHTML = '';
   addPastStageRow();
   render();
-  alert(`${entries.length}枚のマウスピースを登録しました`);
+  showToast(`${entries.length}枚のマウスピースを登録しました`, { undo: true });
 }
 
 el.setupOn.addEventListener('click', () => setup('on'));
 el.setupOff.addEventListener('click', () => setup('off'));
 el.toggleBtn.addEventListener('click', toggle);
 el.replaceBtn.addEventListener('click', replaceStage);
-el.undoBtn.addEventListener('click', undo);
 el.resetBtn.addEventListener('click', resetAll);
 el.menuBtn.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -925,7 +945,7 @@ el.stageStartInput.addEventListener('change', () => {
     stage.start = ts;
     saveStages(stages);
     render();
-    showToast('開始日時を保存しました');
+    showToast('開始日時を保存しました', { undo: true });
   }
 });
 
@@ -936,7 +956,7 @@ el.totalAlignersInput.addEventListener('change', () => {
   totalAligners = val ? Number(val) : null;
   saveTotalAligners(totalAligners);
   render();
-  showToast('保存しました');
+  showToast('保存しました', { undo: true });
 });
 
 el.goalInput.value = goalHours;
@@ -947,7 +967,7 @@ el.goalInput.addEventListener('change', () => {
     goalHours = val;
     saveGoalHours(goalHours);
     render();
-    showToast('保存しました');
+    showToast('保存しました', { undo: true });
   }
 });
 

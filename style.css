@@ -94,24 +94,6 @@ button { font-family: inherit; }
   flex-shrink: 0;
 }
 
-.undo-btn {
-  position: absolute;
-  top: calc(18px + env(safe-area-inset-top));
-  left: 16px;
-  border: none;
-  background: var(--bg);
-  color: var(--text-soft);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  box-shadow:
-    4px 4px 8px var(--clay-dark),
-    -2px -2px 6px var(--clay-light);
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
-}
-
 .menu-btn {
   position: absolute;
   top: calc(16px + env(safe-area-inset-top));
@@ -143,7 +125,6 @@ button { font-family: inherit; }
 }
 
 /* クレイの押し込み挙動（共通） */
-.undo-btn:active,
 .menu-btn:active,
 .settings-back-btn:active,
 .nav-menu-item:active,
@@ -1289,11 +1270,15 @@ main {
   opacity: 0;
   pointer-events: none;
   z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 32px);
   background: linear-gradient(145deg, #3A3833, #2A2823);
   color: #FFFFFF;
   font-size: 13px;
   font-weight: 700;
-  padding: 11px 22px;
+  padding: 10px 10px 10px 22px;
   border-radius: 999px;
   box-shadow:
     6px 6px 16px rgba(0,0,0,0.28),
@@ -1304,7 +1289,31 @@ main {
 
 .toast.show {
   opacity: 1;
+  pointer-events: auto;
   transform: translateX(-50%) translateY(0);
+}
+
+.toast-message {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toast-undo-btn {
+  flex-shrink: 0;
+  border: none;
+  background: rgba(255,255,255,0.16);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.toast-undo-btn:active {
+  background: rgba(255,255,255,0.28);
+  transform: scale(0.96);
 }
 
 /* モーション低減設定を尊重 */
