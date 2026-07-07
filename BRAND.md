@@ -53,10 +53,10 @@
 ## タイポグラフィ
 
 ```
-フォントファミリー: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic UI", -apple-system, sans-serif
+フォントファミリー: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic UI", -apple-system, sans-serif
 ```
 
-丸ゴシック（Zen Maru Gothic / Google Fonts）を採用。クレイモーフィズムの丸みと調和させる。
+丸ゴシック（M PLUS Rounded 1c / Google Fonts）を採用。クレイモーフィズムの丸みと調和させる。
 ウェイトは 500（本文）／700（強調・ボタン）／900（見出し・大きな数値）の3段階のみ使用する。
 数値表示には `font-variant-numeric: tabular-nums` を指定し、桁の揺れを防ぐ。
 
