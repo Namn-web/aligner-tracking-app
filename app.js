@@ -12,6 +12,7 @@ const STORAGE_KEYS = {
 const DAY_MS = 24 * 60 * 60 * 1000;
 const UNDO_LIMIT = 20;
 const HISTORY_DAYS = 10;
+const SESSION_LOG_LIMIT = 30;
 
 const el = {
   setup: document.getElementById('setup'),
@@ -55,7 +56,9 @@ const el = {
   alertInput: document.getElementById('alertInput'),
   notifBtn: document.getElementById('notifBtn'),
   notifStatus: document.getElementById('notifStatus'),
-  cycleBtns: document.querySelectorAll('.cycle-btn'),
+  cycleBtns: document.querySelectorAll('.replace-cycle-btn'),
+  sessionTabs: document.querySelectorAll('.session-tab'),
+  sessionLogList: document.getElementById('sessionLogList'),
   pastStagesList: document.getElementById('pastStagesList'),
   addPastStageBtn: document.getElementById('addPastStageBtn'),
   savePastStagesBtn: document.getElementById('savePastStagesBtn'),
@@ -234,6 +237,12 @@ function fromInputValue(str) {
 function formatDate(ts) {
   const d = new Date(ts);
   return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+function formatTime(ts) {
+  const d = new Date(ts);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 // ステージ開始後、すでに終わっている「丸1日」の開始時刻一覧を返す
@@ -506,6 +515,7 @@ function render() {
   }
 
   renderHistory(now);
+  renderSessionLog(now);
   renderStage(now);
   renderChecklist();
   checkWearAlert(now);
@@ -799,6 +809,60 @@ function renderHistory(now) {
   });
 }
 
+// イベントログを「装着」「外し」の連続区間（セッション）に変換する
+function computeSessions(events, now) {
+  const sessions = [];
+  for (let i = 0; i < events.length; i++) {
+    const start = events[i].ts;
+    const isLast = i === events.length - 1;
+    const end = isLast ? now : events[i + 1].ts;
+    sessions.push({ type: events[i].type, start, end, ongoing: isLast });
+  }
+  return sessions;
+}
+
+let sessionLogFilter = 'on';
+
+function renderSessionLog(now) {
+  const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+  const sessions = computeSessions(events, now)
+    .filter((s) => s.type === sessionLogFilter)
+    .reverse()
+    .slice(0, SESSION_LOG_LIMIT);
+
+  el.sessionLogList.innerHTML = '';
+
+  if (sessions.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'session-log-empty';
+    li.textContent = sessionLogFilter === 'on' ? 'まだ装着の記録がありません。' : 'まだ外した記録がありません。';
+    el.sessionLogList.appendChild(li);
+    return;
+  }
+
+  sessions.forEach((s) => {
+    const d = new Date(s.start);
+    const li = document.createElement('li');
+
+    const dateSpan = document.createElement('span');
+    dateSpan.className = 'session-log-date';
+    dateSpan.textContent = `${d.getMonth() + 1}/${d.getDate()}（${dayNames[d.getDay()]}）`;
+
+    const rangeSpan = document.createElement('span');
+    rangeSpan.className = 'session-log-range';
+    rangeSpan.textContent = `${formatTime(s.start)} 〜 ${s.ongoing ? '進行中' : formatTime(s.end)}`;
+
+    const durationSpan = document.createElement('span');
+    durationSpan.className = 'session-log-duration';
+    durationSpan.textContent = formatDuration(s.end - s.start);
+
+    li.appendChild(dateSpan);
+    li.appendChild(rangeSpan);
+    li.appendChild(durationSpan);
+    el.sessionLogList.appendChild(li);
+  });
+}
+
 function toggle() {
   const state = currentState();
   const nextType = state === 'on' ? 'off' : 'on';
@@ -1004,6 +1068,14 @@ el.cycleBtns.forEach(btn => {
 el.addPastStageBtn.addEventListener('click', addPastStageRow);
 el.savePastStagesBtn.addEventListener('click', savePastStages);
 addPastStageRow();
+
+el.sessionTabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    sessionLogFilter = btn.dataset.sessionType;
+    el.sessionTabs.forEach(b => b.classList.toggle('active', b === btn));
+    renderSessionLog(Date.now());
+  });
+});
 
 el.historyFrom.addEventListener('change', () => {
   if (el.historyFrom.value && !el.historyTo.value) {

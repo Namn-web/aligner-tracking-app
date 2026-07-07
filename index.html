@@ -105,6 +105,17 @@
       <ul id="stageChecklist" class="checklist"></ul>
     </section>
 
+    <section class="card session-log-card">
+      <div class="session-log-header">
+        <p class="stats-label">装着・外し 記録</p>
+        <div class="cycle-selector session-tabs">
+          <button class="cycle-btn session-tab active" data-session-type="on">装着</button>
+          <button class="cycle-btn session-tab" data-session-type="off">外し</button>
+        </div>
+      </div>
+      <ul id="sessionLogList" class="session-log-list"></ul>
+    </section>
+
     <section class="card history-card">
       <div class="history-header">
         <p class="stats-label" id="historyLabel">直近10日間</p>
@@ -139,10 +150,10 @@
 
       <label class="settings-label">交換周期（日）</label>
       <div class="cycle-selector">
-        <button class="cycle-btn" data-days="7">7日</button>
-        <button class="cycle-btn" data-days="8">8日</button>
-        <button class="cycle-btn" data-days="9">9日</button>
-        <button class="cycle-btn" data-days="10">10日</button>
+        <button class="cycle-btn replace-cycle-btn" data-days="7">7日</button>
+        <button class="cycle-btn replace-cycle-btn" data-days="8">8日</button>
+        <button class="cycle-btn replace-cycle-btn" data-days="9">9日</button>
+        <button class="cycle-btn replace-cycle-btn" data-days="10">10日</button>
       </div>
     </div>
 

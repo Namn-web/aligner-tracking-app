@@ -748,6 +748,77 @@ main {
   color: #FFFFFF;
 }
 
+/* 装着・外し 個別記録 */
+.session-log-header {
+  margin-bottom: 14px;
+}
+
+.session-log-header .stats-label {
+  margin: 0 0 10px;
+}
+
+.session-tabs {
+  width: 100%;
+}
+
+.session-tab {
+  flex: 1;
+}
+
+.session-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.session-log-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow:
+    3px 3px 7px var(--clay-dark),
+    -2px -2px 5px var(--clay-light);
+}
+
+.session-log-date {
+  flex-shrink: 0;
+  color: var(--text-soft);
+  font-size: 12px;
+  width: 62px;
+}
+
+.session-log-range {
+  flex: 1;
+  text-align: center;
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-log-duration {
+  flex-shrink: 0;
+  color: var(--text-soft);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-log-empty {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 13px;
+  padding: 18px 0;
+}
+
 /* 外し時間アラートバナー */
 .wear-alert {
   background: linear-gradient(135deg, #FFF3C0, #FFE880);
