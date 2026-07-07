@@ -212,9 +212,11 @@ function dateKey(ts) {
 }
 
 // その日に手動修正(overrides)があればそれを優先し、なければ装着ログから計算する
+// ただし今日は装着中でライブ集計中のため、上書き値があっても常にログから計算する
 function getDayWornMs(dayStart, now) {
   const key = dateKey(dayStart);
-  if (Object.prototype.hasOwnProperty.call(overrides, key)) return overrides[key];
+  const isToday = dayStart === startOfDay(now);
+  if (!isToday && Object.prototype.hasOwnProperty.call(overrides, key)) return overrides[key];
   const rangeEnd = Math.min(dayStart + DAY_MS, now);
   return wornMsInRange(events, dayStart, rangeEnd);
 }
@@ -756,15 +758,20 @@ function renderHistory(now) {
       if (h === snappedHours) opt.selected = true;
       input.appendChild(opt);
     }
-    input.addEventListener('change', () => {
-      pushUndo();
-      const key = dateKey(dayStart);
-      const hours = Number(input.value);
-      overrides[key] = Math.round(hours * 60 * 60 * 1000);
-      saveOverrides(overrides);
-      render();
-      showToast('保存しました', { undo: true });
-    });
+    if (isToday) {
+      input.disabled = true;
+      input.title = '今日は装着中のため編集できません';
+    } else {
+      input.addEventListener('change', () => {
+        pushUndo();
+        const key = dateKey(dayStart);
+        const hours = Number(input.value);
+        overrides[key] = Math.round(hours * 60 * 60 * 1000);
+        saveOverrides(overrides);
+        render();
+        showToast('保存しました', { undo: true });
+      });
+    }
 
     const unitSpan = document.createElement('span');
     unitSpan.className = 'history-unit';

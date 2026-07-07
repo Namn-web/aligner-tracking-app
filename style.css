@@ -717,6 +717,13 @@ main {
     inset -1px -1px 3px rgba(255,255,255,0.7);
 }
 
+.history-input:disabled {
+  color: var(--primary-deep);
+  cursor: default;
+  opacity: 1;
+  -webkit-text-fill-color: var(--primary-deep);
+}
+
 .history-unit { font-size: 14px; color: var(--text-soft); }
 
 /* クレイバッジ */
