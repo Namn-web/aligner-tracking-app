@@ -79,7 +79,7 @@ button { font-family: inherit; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   margin: 0;
   color: var(--text);
@@ -172,7 +172,7 @@ button { font-family: inherit; }
   border-radius: 11px;
   background: transparent;
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   text-align: left;
@@ -217,7 +217,7 @@ button { font-family: inherit; }
   border: none;
   background: var(--bg);
   color: var(--text-soft);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   padding: 7px 16px;
   border-radius: 999px;
@@ -230,7 +230,7 @@ button { font-family: inherit; }
 }
 
 .settings-header h2 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
   margin: 0;
   color: var(--text);
@@ -247,7 +247,7 @@ button { font-family: inherit; }
 }
 
 .settings-section-title {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -272,7 +272,7 @@ button { font-family: inherit; }
   padding: 16px 44px 16px 18px;
   border: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text);
   cursor: pointer;
@@ -300,7 +300,7 @@ button { font-family: inherit; }
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.8;
   color: var(--text-soft);
   padding: 0 18px;
@@ -389,7 +389,7 @@ main {
 /* 初回セットアップ */
 .setup-question {
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   margin: 8px 0 20px;
 }
@@ -401,7 +401,7 @@ main {
   padding: 18px 8px;
   border: none;
   border-radius: 18px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #FFFFFF;
   cursor: pointer;
@@ -533,7 +533,7 @@ main {
 }
 
 .toggle-state {
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 900;
   color: #FFFFFF;
   letter-spacing: 0.03em;
@@ -542,7 +542,7 @@ main {
 .toggle-btn.off-state .toggle-state { color: var(--text); }
 
 .toggle-elapsed {
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255,255,255,0.85);
   font-variant-numeric: tabular-nums;
 }
@@ -550,7 +550,7 @@ main {
 
 /* 統計カード */
 .stats-label {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -559,7 +559,7 @@ main {
 }
 
 .stats-value {
-  font-size: 42px;
+  font-size: 44px;
   font-weight: 500;
   margin: 0 0 2px;
   color: var(--text);
@@ -569,7 +569,7 @@ main {
 }
 
 .stats-goal {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-soft);
   margin: 0 0 16px;
 }
@@ -610,7 +610,7 @@ main {
 
 .status-message {
   margin: 10px 0 0;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-soft);
   text-align: center;
@@ -646,7 +646,7 @@ main {
   border-radius: 9px;
   padding: 5px 6px;
   min-height: 30px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
   font-family: inherit;
   width: 110px;
@@ -659,7 +659,7 @@ main {
 
 .filter-sep {
   color: var(--text-soft);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .history-list {
@@ -675,7 +675,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 16px;
   padding: 10px 14px;
   border-radius: 14px;
   background: var(--bg);
@@ -691,7 +691,7 @@ main {
     -2px -2px 5px rgba(255,255,255,0.85);
 }
 
-.history-date { color: var(--text); font-size: 15px; font-weight: 500; }
+.history-date { color: var(--text); font-size: 17px; font-weight: 500; }
 .history-date.today { color: var(--primary-deep); font-weight: 900; }
 
 .history-value { display: flex; align-items: center; gap: 6px; }
@@ -703,7 +703,7 @@ main {
   padding: 4px 6px;
   border-radius: 8px;
   border: none;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   font-family: inherit;
   color: var(--text);
@@ -724,11 +724,11 @@ main {
   -webkit-text-fill-color: var(--primary-deep);
 }
 
-.history-unit { font-size: 14px; color: var(--text-soft); }
+.history-unit { font-size: 16px; color: var(--text-soft); }
 
 /* クレイバッジ */
 .history-badge {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 999px;
@@ -781,7 +781,7 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-size: 13px;
+  font-size: 15px;
   padding: 10px 14px;
   border-radius: 14px;
   background: var(--bg);
@@ -793,7 +793,7 @@ main {
 .session-log-date {
   flex-shrink: 0;
   color: var(--text-soft);
-  font-size: 12px;
+  font-size: 14px;
   width: 62px;
 }
 
@@ -808,14 +808,14 @@ main {
 .session-log-duration {
   flex-shrink: 0;
   color: var(--text-soft);
-  font-size: 12px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
 .session-log-empty {
   text-align: center;
   color: var(--text-soft);
-  font-size: 13px;
+  font-size: 15px;
   padding: 18px 0;
 }
 
@@ -824,7 +824,7 @@ main {
   background: linear-gradient(135deg, #FFF3C0, #FFE880);
   border-radius: 16px;
   padding: 12px 16px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #6A5400;
   text-align: center;
@@ -848,7 +848,7 @@ main {
   border-radius: 12px;
   background: radial-gradient(circle at 38% 35%, #70D9F0, #4CBFD8);
   color: #FFFFFF;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -859,13 +859,13 @@ main {
   transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-.notif-status { font-size: 12px; color: var(--text-soft); }
+.notif-status { font-size: 14px; color: var(--text-soft); }
 
 /* ステージアラート */
 .stage-alert {
   border-radius: 14px;
   padding: 10px 14px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   margin-bottom: 12px;
   box-shadow:
@@ -889,7 +889,7 @@ main {
   padding: 6px 10px;
   border-radius: 12px;
   border: none;
-  font-size: 12px;
+  font-size: 14px;
   font-family: inherit;
   color: var(--text);
   background: var(--bg);
@@ -899,7 +899,7 @@ main {
 }
 
 .stage-progress {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-soft);
   margin: 0 0 4px;
   text-align: center;
@@ -958,7 +958,7 @@ main {
 
 /* ステージ累計不足 */
 .stage-deficit {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   text-align: center;
   margin: 0 0 10px;
@@ -981,18 +981,18 @@ main {
 }
 
 .stage-estimate-label {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-soft);
 }
 
 .stage-estimate-date {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text);
 }
 
 .stage-estimate-note {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-soft);
 }
 
@@ -1004,7 +1004,7 @@ main {
   border-radius: 18px;
   background: radial-gradient(circle at 38% 35%, #70D9F0, #4CBFD8);
   color: #FFFFFF;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.02em;
@@ -1030,7 +1030,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  font-size: 14px;
+  font-size: 16px;
   padding: 0;
   border-radius: 14px;
   background: var(--bg);
@@ -1072,7 +1072,7 @@ main {
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
   padding: 0 14px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-soft);
 }
 
@@ -1103,7 +1103,7 @@ main {
   border-radius: 9px;
   background: rgba(255,255,255,0.55);
   box-shadow: none;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
 }
 
@@ -1139,7 +1139,7 @@ main {
   border: none;
   background: transparent;
   color: var(--text-soft);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
@@ -1176,7 +1176,7 @@ main {
   border: none;
   background: transparent;
   color: var(--primary-deep);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
@@ -1185,13 +1185,13 @@ main {
   text-underline-offset: 3px;
 }
 
-.checklist-icon { font-size: 13px; color: var(--text-soft); width: 16px; text-align: center; }
+.checklist-icon { font-size: 15px; color: var(--text-soft); width: 16px; text-align: center; }
 .checklist-icon.done { color: var(--green-deep); font-weight: 900; }
 .checklist li.current .checklist-icon { color: var(--primary-deep); }
 
 .checklist-range {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-soft);
   font-variant-numeric: tabular-nums;
 }
@@ -1199,7 +1199,7 @@ main {
 /* 設定フォーム */
 .settings-label {
   display: block;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-soft);
   margin: 16px 0 6px;
 }
@@ -1222,7 +1222,7 @@ main {
   border: none;
   background: transparent;
   color: var(--text-soft);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
@@ -1241,7 +1241,7 @@ main {
 
 /* 過去のマウスピース登録 */
 .settings-hint {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text-soft);
   margin: 0 0 14px;
@@ -1266,7 +1266,7 @@ main {
   padding: 9px 10px;
   border-radius: 10px;
   border: none;
-  font-size: 13px;
+  font-size: 15px;
   font-family: inherit;
   color: var(--text);
   background: var(--bg);
@@ -1281,7 +1281,7 @@ main {
   border-radius: 10px;
   background: var(--bg);
   color: var(--text-soft);
-  font-size: 15px;
+  font-size: 17px;
   cursor: pointer;
   box-shadow:
     3px 3px 7px var(--clay-dark),
@@ -1295,7 +1295,7 @@ main {
   border-radius: 12px;
   background: transparent;
   color: var(--primary-deep);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
@@ -1314,7 +1314,7 @@ main {
   padding: 11px 14px;
   border-radius: 12px;
   border: none;
-  font-size: 15px;
+  font-size: 17px;
   font-family: inherit;
   color: var(--text);
   background: var(--bg);
@@ -1340,7 +1340,7 @@ main {
   border-radius: 12px;
   background: linear-gradient(135deg, #F8C0A0, #E09070);
   color: #FFFFFF;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   box-shadow:
@@ -1365,7 +1365,7 @@ main {
   max-width: calc(100% - 32px);
   background: linear-gradient(145deg, #3A3833, #2A2823);
   color: #FFFFFF;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   padding: 10px 10px 10px 22px;
   border-radius: 999px;
@@ -1393,7 +1393,7 @@ main {
   background: rgba(255,255,255,0.16);
   color: #FFFFFF;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 900;
   padding: 7px 16px;
   border-radius: 999px;
