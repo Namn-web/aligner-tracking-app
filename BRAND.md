@@ -23,9 +23,9 @@
   --border:       #C8C4BC;   /* ボーダー・区切り線 */
 
   /* プライマリ（ティール） */
-  --primary:      #4CBFD8;   /* メインアクション・装着中状態 */
-  --primary-deep: #2FA8C4;   /* ホバー・ダーク variant */
-  --primary-light:#D6F3FA;   /* 薄い背景（チェックリスト現在進行） */
+  --primary:      #57CEA0;   /* メインアクション・装着中状態 */
+  --primary-deep: #3CAE85;   /* ホバー・ダーク variant */
+  --primary-light:#D0EDE5;   /* 薄い背景（チェックリスト現在進行） */
 
   /* グリーン（達成・成功） */
   --green:        #4DC99A;   /* 目標達成・完了ドット */
@@ -120,7 +120,7 @@ border: 1px solid rgba(0,0,0,0.04);
 
 ### プライマリボタン
 ```css
-background: var(--primary);   /* #4CBFD8 */
+background: var(--primary);   /* #57CEA0 */
 color: #FFFFFF;
 border: none;
 border-radius: 12px;
@@ -163,7 +163,7 @@ border-color: var(--primary);
 |---|---|---|
 | 達成・完了 | `--green-light` `#D4F5E8` | `--green-deep` `#2EB07E` |
 | 警告・不足 | `--peach-light` `#FDEEE6` | `--peach-deep` `#E09070` |
-| 進行中（今日） | `--primary-light` `#D6F3FA` | `--primary` `#4CBFD8` |
+| 進行中（今日） | `--primary-light` `#D0EDE5` | `--primary` `#57CEA0` |
 | 未着手 | `--bg` `#ECEAE4` | `--text-soft` `#8A8A8A` |
 
 ---
