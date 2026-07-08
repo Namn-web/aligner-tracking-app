@@ -43,14 +43,9 @@ const el = {
   ringFill: document.getElementById('ringFill'),
   stageDots: document.getElementById('stageDots'),
   stageDeficit: document.getElementById('stageDeficit'),
-  menuBtn: document.getElementById('menuBtn'),
-  navMenu: document.getElementById('navMenu'),
-  navSettingsBtn: document.getElementById('navSettingsBtn'),
-  navQaBtn: document.getElementById('navQaBtn'),
-  settingsPage: document.getElementById('settingsPage'),
-  settingsBackBtn: document.getElementById('settingsBackBtn'),
-  qaPage: document.getElementById('qaPage'),
-  qaBackBtn: document.getElementById('qaBackBtn'),
+  bottomNav: document.getElementById('bottomNav'),
+  tabPages: document.querySelectorAll('.tab-page'),
+  tabSettings: document.getElementById('tabSettings'),
   resetBtn: document.getElementById('resetBtn'),
   wearAlert: document.getElementById('wearAlert'),
   alertInput: document.getElementById('alertInput'),
@@ -657,7 +652,7 @@ function buildChecklistItem(i, stage, now) {
 }
 
 function openPastStagesRegister() {
-  el.settingsPage.classList.add('open');
+  switchTab('settings');
   setTimeout(() => {
     el.pastStagesList.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 300);
@@ -983,26 +978,14 @@ el.setupOff.addEventListener('click', () => setup('off'));
 el.toggleBtn.addEventListener('click', toggle);
 el.replaceBtn.addEventListener('click', replaceStage);
 el.resetBtn.addEventListener('click', resetAll);
-el.menuBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  el.navMenu.classList.toggle('open');
+function switchTab(name) {
+  el.tabPages.forEach((page) => page.classList.toggle('active', page.id === `tab${name[0].toUpperCase()}${name.slice(1)}`));
+  el.bottomNav.querySelectorAll('.bottom-nav-item').forEach((btn) => btn.classList.toggle('active', btn.dataset.tab === name));
+}
+
+el.bottomNav.querySelectorAll('.bottom-nav-item').forEach((btn) => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
 });
-
-el.navSettingsBtn.addEventListener('click', () => {
-  el.navMenu.classList.remove('open');
-  el.settingsPage.classList.add('open');
-});
-
-el.navQaBtn.addEventListener('click', () => {
-  el.navMenu.classList.remove('open');
-  el.qaPage.classList.add('open');
-});
-
-el.settingsBackBtn.addEventListener('click', () => el.settingsPage.classList.remove('open'));
-el.qaBackBtn.addEventListener('click', () => el.qaPage.classList.remove('open'));
-
-// メニュー外クリックで閉じる
-document.addEventListener('click', () => el.navMenu.classList.remove('open'));
 
 // Q&Aアコーディオン
 document.querySelectorAll('.qa-question').forEach((btn) => {

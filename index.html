@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>キョウセイ管理</title>
-<meta name="theme-color" content="#DDD9D2">
+<meta name="theme-color" content="#EDE9E3">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260708">
+<link rel="stylesheet" href="style.css?v=20260709b">
 </head>
 <body>
 
@@ -22,21 +22,7 @@
 
 <header class="app-header">
   <h1><svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 5c-5.5 0-10 4.6-10 10.4 0 4.1 1.5 7 2.7 9.9 1.1 2.6 2 5.8 2.5 10.3.3 2.9 1 6.4 3.6 6.4 2.4 0 3.1-2.7 3.5-5.4.5-3.5 1.6-8 4.7-8s4.2 4.5 4.7 8c.4 2.7 1.1 5.4 3.5 5.4 2.6 0 3.3-3.5 3.6-6.4.5-4.5 1.4-7.7 2.5-10.3C37.5 22.4 39 19.5 39 15.4 39 9.6 34.5 5 29 5c-2.9 0-4.4 1.5-7 1.5S17.9 5 15 5z"/></svg>マウスピース管理</h1>
-  <button id="menuBtn" class="menu-btn" aria-label="メニューを開く">
-    <span></span><span></span><span></span>
-  </button>
 </header>
-
-<div id="navMenu" class="nav-menu">
-  <button id="navSettingsBtn" class="nav-menu-item">
-    <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 0 0 12 8.5zm9-.6-2.2-.5a7.6 7.6 0 0 0-.7-1.7l1.2-1.9a1 1 0 0 0-.13-1.25l-1.7-1.7a1 1 0 0 0-1.25-.13l-1.9 1.2a7.6 7.6 0 0 0-1.7-.7L12.1 1h-2.4l-.5 2.2a7.6 7.6 0 0 0-1.7.7L5.6 2.7a1 1 0 0 0-1.25.13l-1.7 1.7a1 1 0 0 0-.13 1.25l1.2 1.9a7.6 7.6 0 0 0-.7 1.7L1 9.9v2.4l2.2.5c.16.6.4 1.17.7 1.7l-1.2 1.9a1 1 0 0 0 .13 1.25l1.7 1.7c.34.33.86.39 1.25.13l1.9-1.2c.53.3 1.1.54 1.7.7l.5 2.2h2.4l.5-2.2a7.6 7.6 0 0 0 1.7-.7l1.9 1.2c.4.26.9.2 1.25-.13l1.7-1.7a1 1 0 0 0 .13-1.25l-1.2-1.9c.3-.53.54-1.1.7-1.7l2.2-.5V9.9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-    設定
-  </button>
-  <button id="navQaBtn" class="nav-menu-item">
-    <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 4c-.63.6-1.8.2-1.8-.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 8.5h7M8.5 11.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-    Q&amp;A
-  </button>
-</div>
 
 <main>
 
@@ -54,196 +40,221 @@
 
     <div id="wearAlert" class="wear-alert hidden"></div>
 
-    <div class="toggle-wrap">
-      <svg class="progress-ring" viewBox="0 0 244 244" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#85DDBB"/>
-            <stop offset="100%" stop-color="#3CAE85"/>
-          </linearGradient>
-        </defs>
-        <circle class="ring-track" cx="122" cy="122" r="110"/>
-        <circle id="ringFill" class="ring-fill" cx="122" cy="122" r="110"/>
-      </svg>
-      <button id="toggleBtn" class="toggle-btn">
-        <span id="toggleIcon" class="toggle-icon">
-          <svg class="icon-tooth" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 5c-5.5 0-10 4.6-10 10.4 0 4.1 1.5 7 2.7 9.9 1.1 2.6 2 5.8 2.5 10.3.3 2.9 1 6.4 3.6 6.4 2.4 0 3.1-2.7 3.5-5.4.5-3.5 1.6-8 4.7-8s4.2 4.5 4.7 8c.4 2.7 1.1 5.4 3.5 5.4 2.6 0 3.3-3.5 3.6-6.4.5-4.5 1.4-7.7 2.5-10.3C37.5 22.4 39 19.5 39 15.4 39 9.6 34.5 5 29 5c-2.9 0-4.4 1.5-7 1.5S17.9 5 15 5z"/></svg>
-          <svg class="icon-case" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 24h30a4 4 0 0 1 4 4v4a9 9 0 0 1-9 9H14a9 9 0 0 1-9-9v-4a4 4 0 0 1 4-4z"/><path d="M11 23c0-7 6.5-11.5 13-11.5S37 16 37 23" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/></svg>
-        </span>
-        <span id="toggleState" class="toggle-state">装着中</span>
-        <span id="toggleElapsed" class="toggle-elapsed">0分</span>
-      </button>
+    <!-- ホームタブ -->
+    <div id="tabHome" class="tab-page active">
+
+      <div class="toggle-wrap">
+        <svg class="progress-ring" viewBox="0 0 244 244" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#85DDBB"/>
+              <stop offset="100%" stop-color="#3CAE85"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="122" cy="122" r="110"/>
+          <circle id="ringFill" class="ring-fill" cx="122" cy="122" r="110"/>
+        </svg>
+        <button id="toggleBtn" class="toggle-btn">
+          <span id="toggleIcon" class="toggle-icon">
+            <svg class="icon-tooth" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 5c-5.5 0-10 4.6-10 10.4 0 4.1 1.5 7 2.7 9.9 1.1 2.6 2 5.8 2.5 10.3.3 2.9 1 6.4 3.6 6.4 2.4 0 3.1-2.7 3.5-5.4.5-3.5 1.6-8 4.7-8s4.2 4.5 4.7 8c.4 2.7 1.1 5.4 3.5 5.4 2.6 0 3.3-3.5 3.6-6.4.5-4.5 1.4-7.7 2.5-10.3C37.5 22.4 39 19.5 39 15.4 39 9.6 34.5 5 29 5c-2.9 0-4.4 1.5-7 1.5S17.9 5 15 5z"/></svg>
+            <svg class="icon-case" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 24h30a4 4 0 0 1 4 4v4a9 9 0 0 1-9 9H14a9 9 0 0 1-9-9v-4a4 4 0 0 1 4-4z"/><path d="M11 23c0-7 6.5-11.5 13-11.5S37 16 37 23" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/></svg>
+          </span>
+          <span id="toggleState" class="toggle-state">装着中</span>
+          <span id="toggleElapsed" class="toggle-elapsed">0分</span>
+        </button>
+      </div>
+
+      <section class="card stats-card">
+        <p class="stats-label">今日の装着時間</p>
+        <p class="stats-value"><span id="todayWorn">0分</span></p>
+        <p class="stats-goal">目標 <span id="goalLabel">22時間</span></p>
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <p id="statusMessage" class="status-message"></p>
+      </section>
+
+      <section class="card stage-card">
+        <div id="stageAlert" class="stage-alert hidden"></div>
+        <p class="stats-label"><span id="stageNumber">1枚目</span></p>
+
+        <label class="settings-label" for="stageStartInput">開始日時</label>
+        <input type="datetime-local" id="stageStartInput">
+
+        <p class="stage-progress" id="stageProgress"></p>
+        <div id="stageDots" class="stage-dots"></div>
+        <p id="stageDeficit" class="stage-deficit"></p>
+        <p class="stage-estimate" id="stageEstimate"></p>
+
+        <button id="replaceBtn" class="replace-btn">このマウスピースを交換した</button>
+      </section>
+
     </div>
 
-    <section class="card stats-card">
-      <p class="stats-label">今日の装着時間</p>
-      <p class="stats-value"><span id="todayWorn">0分</span></p>
-      <p class="stats-goal">目標 <span id="goalLabel">22時間</span></p>
-      <div class="progress-bar">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-      <p id="statusMessage" class="status-message"></p>
-    </section>
+    <!-- 記録タブ -->
+    <div id="tabRecord" class="tab-page">
 
-    <section class="card stage-card">
-      <div id="stageAlert" class="stage-alert hidden"></div>
-      <p class="stats-label"><span id="stageNumber">1枚目</span></p>
+      <section class="card checklist-card">
+        <p class="stats-label">マウスピース チェックリスト</p>
+        <ul id="stageChecklist" class="checklist"></ul>
+      </section>
 
-      <label class="settings-label" for="stageStartInput">開始日時</label>
-      <input type="datetime-local" id="stageStartInput">
-
-      <p class="stage-progress" id="stageProgress"></p>
-      <div id="stageDots" class="stage-dots"></div>
-      <p id="stageDeficit" class="stage-deficit"></p>
-      <p class="stage-estimate" id="stageEstimate"></p>
-
-      <button id="replaceBtn" class="replace-btn">このマウスピースを交換した</button>
-    </section>
-
-    <section class="card checklist-card">
-      <p class="stats-label">マウスピース チェックリスト</p>
-      <ul id="stageChecklist" class="checklist"></ul>
-    </section>
-
-    <section class="card session-log-card">
-      <div class="session-log-header">
-        <p class="stats-label">装着・外し 記録</p>
-        <div class="cycle-selector session-tabs">
-          <button class="cycle-btn session-tab active" data-session-type="on">装着</button>
-          <button class="cycle-btn session-tab" data-session-type="off">外し</button>
+      <section class="card session-log-card">
+        <div class="session-log-header">
+          <p class="stats-label">装着・外し 記録</p>
+          <div class="cycle-selector session-tabs">
+            <button class="cycle-btn session-tab active" data-session-type="on">装着</button>
+            <button class="cycle-btn session-tab" data-session-type="off">外し</button>
+          </div>
         </div>
-      </div>
-      <ul id="sessionLogList" class="session-log-list"></ul>
-    </section>
+        <ul id="sessionLogList" class="session-log-list"></ul>
+      </section>
 
-    <section class="card history-card">
-      <div class="history-header">
-        <p class="stats-label" id="historyLabel">直近10日間</p>
-        <div class="history-filter">
-          <input type="date" id="historyFrom">
-          <span class="filter-sep">〜</span>
-          <input type="date" id="historyTo">
+      <section class="card history-card">
+        <div class="history-header">
+          <p class="stats-label" id="historyLabel">直近10日間</p>
+          <div class="history-filter-group">
+            <span class="history-filter-label">期間指定</span>
+            <div class="history-filter">
+              <input type="date" id="historyFrom">
+              <span class="filter-sep">〜</span>
+              <input type="date" id="historyTo">
+            </div>
+          </div>
         </div>
+        <ul id="historyList" class="history-list"></ul>
+      </section>
+
+    </div>
+
+    <!-- 設定タブ -->
+    <div id="tabSettings" class="tab-page">
+      <div class="settings-content">
+
+        <div class="card">
+          <p class="settings-section-title">装着目標</p>
+          <label class="settings-label" for="goalInput">1日の目標時間（時間）</label>
+          <input type="number" id="goalInput" min="18" max="24" step="1">
+
+          <label class="settings-label" for="totalAlignersInput">合計枚数（任意・あとで変更可）</label>
+          <input type="number" id="totalAlignersInput" min="1" step="1" placeholder="未設定でもOK">
+
+          <label class="settings-label">交換周期（日）</label>
+          <div class="cycle-selector">
+            <button class="cycle-btn replace-cycle-btn" data-days="7">7日</button>
+            <button class="cycle-btn replace-cycle-btn" data-days="8">8日</button>
+            <button class="cycle-btn replace-cycle-btn" data-days="9">9日</button>
+            <button class="cycle-btn replace-cycle-btn" data-days="10">10日</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="settings-section-title">過去のマウスピースを登録</p>
+          <p class="settings-hint">すでに交換済みのマウスピースをまとめて登録できます。装着時間の記録は残りませんが、交換回数・累計枚数には反映されます。</p>
+          <div id="pastStagesList" class="past-stage-list"></div>
+          <button id="addPastStageBtn" class="add-row-btn" type="button">＋ 行を追加</button>
+          <button id="savePastStagesBtn" class="notif-btn past-stage-save" type="button">登録する</button>
+        </div>
+
+        <div class="card">
+          <p class="settings-section-title">アラート・通知</p>
+          <label class="settings-label">外し時間アラート（分、0で無効）</label>
+          <input type="number" id="alertInput" min="0" step="5" placeholder="例：60">
+          <div class="notif-row">
+            <button id="notifBtn" class="notif-btn">通知を有効にする</button>
+            <span id="notifStatus" class="notif-status"></span>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="settings-section-title">データ管理</p>
+          <button id="resetBtn" class="reset-btn">データを初期化する</button>
+        </div>
+
       </div>
-      <ul id="historyList" class="history-list"></ul>
-    </section>
+    </div>
+
+    <!-- Q&Aタブ -->
+    <div id="tabQa" class="tab-page">
+      <div class="settings-content">
+
+        <div class="qa-item">
+          <button class="qa-question">1日に何時間装着が必要ですか？</button>
+          <div class="qa-answer">基本的に1日20〜22時間以上の装着が必要です。食事・歯磨き・アライナーの洗浄時以外は装着し続けることが理想です。装着時間が不足すると歯の移動が遅れ、次のアライナーに進めない場合があります。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">食事のときは外してもいいですか？</button>
+          <div class="qa-answer">はい、必ず外してください。装着したまま食事をするとアライナーの破損・変形・変色の原因になります。また食べかすが挟まり、虫歯や歯周病のリスクが高まります。食後は歯を磨いてから装着してください。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">水以外の飲み物を飲むときは？</button>
+          <div class="qa-answer">水以外を飲む場合は外してください。コーヒー・紅茶・ジュース・アルコールなどはアライナーを着色・変形させます。糖分を含む飲み物はアライナー内部に閉じ込められ、虫歯の原因になります。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">装着前の歯磨きは必須ですか？</button>
+          <div class="qa-answer">はい、必須です。食後そのまま装着すると、食べかすや糖分がアライナー内部に閉じ込められ虫歯・口臭の原因になります。外出先でも洗口液やデンタルフロスを活用しましょう。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">アライナーの洗い方は？</button>
+          <div class="qa-answer">流水とやわらかい歯ブラシで優しく洗ってください。専用の洗浄剤（リテーナークリーナーなど）も効果的です。熱湯・歯磨き粉は変形・細かい傷の原因になるため使用しないでください。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">1枚のアライナーはどのくらい使いますか？</button>
+          <div class="qa-answer">担当医の指示によって異なりますが、一般的に1枚あたり7〜14日です。装着時間が不足している場合は自己判断で交換を進めず、担当医に相談してください。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">装着中に痛みや違和感はありますか？</button>
+          <div class="qa-answer">アライナー交換直後に締め付け感や軽い痛みを感じることがあります。これは歯が正しく動いているサインで、通常2〜3日で落ち着きます。強い痛みが続く場合は担当医に相談してください。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">アライナーをなくしたり壊したりしたら？</button>
+          <div class="qa-answer">すぐに担当医に連絡してください。それまでの間は1つ前のアライナーを装着するか、担当医の指示に従ってください。外したときは必ずケースに入れて保管する習慣をつけましょう。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">スポーツや楽器演奏のときはどうすればいい？</button>
+          <div class="qa-answer">激しいコンタクトスポーツ（ラグビー・格闘技など）の場合はマウスガードとの兼ね合いを担当医に相談してください。管楽器の演奏は慣れるまで時間がかかることがありますが、継続すると改善されます。</div>
+        </div>
+
+        <div class="qa-item">
+          <button class="qa-question">治療期間はどのくらいですか？</button>
+          <div class="qa-answer">症例の難易度によって大きく異なります。軽度なら6〜12ヶ月、中程度で1〜2年、重度の場合はそれ以上かかることもあります。定期的な通院と装着時間の遵守が期間短縮につながります。</div>
+        </div>
+
+      </div>
+    </div>
 
   </section>
 
 </main>
 
+<nav id="bottomNav" class="bottom-nav">
+  <button class="bottom-nav-item active" data-tab="home" type="button">
+    <svg class="bottom-nav-icon" viewBox="0 0 48 48" aria-hidden="true"><path d="M15 5c-5.5 0-10 4.6-10 10.4 0 4.1 1.5 7 2.7 9.9 1.1 2.6 2 5.8 2.5 10.3.3 2.9 1 6.4 3.6 6.4 2.4 0 3.1-2.7 3.5-5.4.5-3.5 1.6-8 4.7-8s4.2 4.5 4.7 8c.4 2.7 1.1 5.4 3.5 5.4 2.6 0 3.3-3.5 3.6-6.4.5-4.5 1.4-7.7 2.5-10.3C37.5 22.4 39 19.5 39 15.4 39 9.6 34.5 5 29 5c-2.9 0-4.4 1.5-7 1.5S17.9 5 15 5z"/></svg>
+    <span>ホーム</span>
+  </button>
+  <button class="bottom-nav-item" data-tab="record" type="button">
+    <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>
+    <span>記録</span>
+  </button>
+  <button class="bottom-nav-item" data-tab="qa" type="button">
+    <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 4c-.63.6-1.8.2-1.8-.7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.5 8.5h7M8.5 11.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>Q&amp;A</span>
+  </button>
+  <button class="bottom-nav-item" data-tab="settings" type="button">
+    <svg class="bottom-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 0 0 12 8.5zm9-.6-2.2-.5a7.6 7.6 0 0 0-.7-1.7l1.2-1.9a1 1 0 0 0-.13-1.25l-1.7-1.7a1 1 0 0 0-1.25-.13l-1.9 1.2a7.6 7.6 0 0 0-1.7-.7L12.1 1h-2.4l-.5 2.2a7.6 7.6 0 0 0-1.7.7L5.6 2.7a1 1 0 0 0-1.25.13l-1.7 1.7a1 1 0 0 0-.13 1.25l1.2 1.9a7.6 7.6 0 0 0-.7 1.7L1 9.9v2.4l2.2.5c.16.6.4 1.17.7 1.7l-1.2 1.9a1 1 0 0 0 .13 1.25l1.7 1.7c.34.33.86.39 1.25.13l1.9-1.2c.53.3 1.1.54 1.7.7l.5 2.2h2.4l.5-2.2a7.6 7.6 0 0 0 1.7-.7l1.9 1.2c.4.26.9.2 1.25-.13l1.7-1.7a1 1 0 0 0 .13-1.25l-1.2-1.9c.3-.53.54-1.1.7-1.7l2.2-.5V9.9z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <span>設定</span>
+  </button>
+</nav>
+
 <!-- 設定ページ（右からスライドイン） -->
-<div id="settingsPage" class="settings-page">
-  <div class="settings-header">
-    <button id="settingsBackBtn" class="settings-back-btn">← 戻る</button>
-    <h2>設定</h2>
-  </div>
-  <div class="settings-content">
-
-    <div class="card">
-      <p class="settings-section-title">装着目標</p>
-      <label class="settings-label" for="goalInput">1日の目標時間（時間）</label>
-      <input type="number" id="goalInput" min="18" max="24" step="1">
-
-      <label class="settings-label" for="totalAlignersInput">合計枚数（任意・あとで変更可）</label>
-      <input type="number" id="totalAlignersInput" min="1" step="1" placeholder="未設定でもOK">
-
-      <label class="settings-label">交換周期（日）</label>
-      <div class="cycle-selector">
-        <button class="cycle-btn replace-cycle-btn" data-days="7">7日</button>
-        <button class="cycle-btn replace-cycle-btn" data-days="8">8日</button>
-        <button class="cycle-btn replace-cycle-btn" data-days="9">9日</button>
-        <button class="cycle-btn replace-cycle-btn" data-days="10">10日</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <p class="settings-section-title">過去のマウスピースを登録</p>
-      <p class="settings-hint">すでに交換済みのマウスピースをまとめて登録できます。装着時間の記録は残りませんが、交換回数・累計枚数には反映されます。</p>
-      <div id="pastStagesList" class="past-stage-list"></div>
-      <button id="addPastStageBtn" class="add-row-btn" type="button">＋ 行を追加</button>
-      <button id="savePastStagesBtn" class="notif-btn past-stage-save" type="button">登録する</button>
-    </div>
-
-    <div class="card">
-      <p class="settings-section-title">アラート・通知</p>
-      <label class="settings-label">外し時間アラート（分、0で無効）</label>
-      <input type="number" id="alertInput" min="0" step="5" placeholder="例：60">
-      <div class="notif-row">
-        <button id="notifBtn" class="notif-btn">通知を有効にする</button>
-        <span id="notifStatus" class="notif-status"></span>
-      </div>
-    </div>
-
-    <div class="card">
-      <p class="settings-section-title">データ管理</p>
-      <button id="resetBtn" class="reset-btn">データを初期化する</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- Q&Aページ -->
-<div id="qaPage" class="settings-page">
-  <div class="settings-header">
-    <button id="qaBackBtn" class="settings-back-btn">← 戻る</button>
-    <h2>Q&amp;A</h2>
-  </div>
-  <div class="settings-content">
-
-    <div class="qa-item">
-      <button class="qa-question">1日に何時間装着が必要ですか？</button>
-      <div class="qa-answer">基本的に1日20〜22時間以上の装着が必要です。食事・歯磨き・アライナーの洗浄時以外は装着し続けることが理想です。装着時間が不足すると歯の移動が遅れ、次のアライナーに進めない場合があります。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">食事のときは外してもいいですか？</button>
-      <div class="qa-answer">はい、必ず外してください。装着したまま食事をするとアライナーの破損・変形・変色の原因になります。また食べかすが挟まり、虫歯や歯周病のリスクが高まります。食後は歯を磨いてから装着してください。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">水以外の飲み物を飲むときは？</button>
-      <div class="qa-answer">水以外を飲む場合は外してください。コーヒー・紅茶・ジュース・アルコールなどはアライナーを着色・変形させます。糖分を含む飲み物はアライナー内部に閉じ込められ、虫歯の原因になります。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">装着前の歯磨きは必須ですか？</button>
-      <div class="qa-answer">はい、必須です。食後そのまま装着すると、食べかすや糖分がアライナー内部に閉じ込められ虫歯・口臭の原因になります。外出先でも洗口液やデンタルフロスを活用しましょう。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">アライナーの洗い方は？</button>
-      <div class="qa-answer">流水とやわらかい歯ブラシで優しく洗ってください。専用の洗浄剤（リテーナークリーナーなど）も効果的です。熱湯・歯磨き粉は変形・細かい傷の原因になるため使用しないでください。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">1枚のアライナーはどのくらい使いますか？</button>
-      <div class="qa-answer">担当医の指示によって異なりますが、一般的に1枚あたり7〜14日です。装着時間が不足している場合は自己判断で交換を進めず、担当医に相談してください。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">装着中に痛みや違和感はありますか？</button>
-      <div class="qa-answer">アライナー交換直後に締め付け感や軽い痛みを感じることがあります。これは歯が正しく動いているサインで、通常2〜3日で落ち着きます。強い痛みが続く場合は担当医に相談してください。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">アライナーをなくしたり壊したりしたら？</button>
-      <div class="qa-answer">すぐに担当医に連絡してください。それまでの間は1つ前のアライナーを装着するか、担当医の指示に従ってください。外したときは必ずケースに入れて保管する習慣をつけましょう。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">スポーツや楽器演奏のときはどうすればいい？</button>
-      <div class="qa-answer">激しいコンタクトスポーツ（ラグビー・格闘技など）の場合はマウスガードとの兼ね合いを担当医に相談してください。管楽器の演奏は慣れるまで時間がかかることがありますが、継続すると改善されます。</div>
-    </div>
-
-    <div class="qa-item">
-      <button class="qa-question">治療期間はどのくらいですか？</button>
-      <div class="qa-answer">症例の難易度によって大きく異なります。軽度なら6〜12ヶ月、中程度で1〜2年、重度の場合はそれ以上かかることもあります。定期的な通院と装着時間の遵守が期間短縮につながります。</div>
-    </div>
-
-  </div>
-</div>
-
-<script src="app.js?v=20260708"></script>
+<script src="app.js?v=20260709"></script>
 </body>
 </html>
