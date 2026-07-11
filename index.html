@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>キョウセイ管理</title>
+<title>アライナー管理</title>
 <meta name="theme-color" content="#EDE9E3">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <link rel="manifest" href="manifest.json">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260709b">
+<link rel="stylesheet" href="style.css?v=20260710b">
 </head>
 <body>
 
@@ -93,6 +93,17 @@
 
     <!-- 記録タブ -->
     <div id="tabRecord" class="tab-page">
+
+      <section class="card visit-card">
+        <p class="stats-label">通院メモ</p>
+
+        <label class="settings-label" for="nextVisitInput">次回来院予定日</label>
+        <input type="date" id="nextVisitInput">
+        <p id="nextVisitCountdown" class="visit-countdown"></p>
+
+        <label class="settings-label" for="memoInput">メモ</label>
+        <textarea id="memoInput" class="memo-textarea" rows="4" placeholder="先生に言われたこと、気になることなど"></textarea>
+      </section>
 
       <section class="card checklist-card">
         <p class="stats-label">マウスピース チェックリスト</p>
@@ -255,6 +266,6 @@
 </nav>
 
 <!-- 設定ページ（右からスライドイン） -->
-<script src="app.js?v=20260709"></script>
+<script src="app.js?v=20260710b"></script>
 </body>
 </html>

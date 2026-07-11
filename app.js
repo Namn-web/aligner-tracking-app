@@ -7,6 +7,8 @@ const STORAGE_KEYS = {
   overrides: 'kyousei_dayOverrides',
   alertMinutes: 'kyousei_alertMinutes',
   replaceCycle: 'kyousei_replaceCycle',
+  nextVisit: 'kyousei_nextVisit',
+  memo: 'kyousei_memo',
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -57,6 +59,9 @@ const el = {
   pastStagesList: document.getElementById('pastStagesList'),
   addPastStageBtn: document.getElementById('addPastStageBtn'),
   savePastStagesBtn: document.getElementById('savePastStagesBtn'),
+  nextVisitInput: document.getElementById('nextVisitInput'),
+  nextVisitCountdown: document.getElementById('nextVisitCountdown'),
+  memoInput: document.getElementById('memoInput'),
   toast: document.getElementById('toast'),
 };
 
@@ -162,6 +167,27 @@ function loadReplaceCycle() {
 
 function saveReplaceCycle(v) {
   localStorage.setItem(STORAGE_KEYS.replaceCycle, String(v));
+}
+
+function loadNextVisit() {
+  const raw = localStorage.getItem(STORAGE_KEYS.nextVisit);
+  return raw ? Number(raw) : null;
+}
+
+function saveNextVisit(value) {
+  if (value === null) {
+    localStorage.removeItem(STORAGE_KEYS.nextVisit);
+  } else {
+    localStorage.setItem(STORAGE_KEYS.nextVisit, String(value));
+  }
+}
+
+function loadMemo() {
+  return localStorage.getItem(STORAGE_KEYS.memo) || '';
+}
+
+function saveMemo(value) {
+  localStorage.setItem(STORAGE_KEYS.memo, value);
 }
 
 let replaceCycle = loadReplaceCycle();
@@ -334,6 +360,8 @@ let totalAligners = loadTotalAligners();
 let undoStack = loadUndoStack();
 let overrides = loadOverrides();
 let alertMinutes = loadAlertMinutes();
+let nextVisit = loadNextVisit();
+let memo = loadMemo();
 let lastAlertTs = 0; // メモリのみ（ページ再読込でリセット）
 
 // 既存ユーザー向け：装着ログはあるがステージ未設定の場合、初回ログを1枚目の開始とする
@@ -513,8 +541,27 @@ function render() {
   renderSessionLog(now);
   renderStage(now);
   renderChecklist();
+  renderVisit(now);
   checkWearAlert(now);
   el.notifStatus.textContent = notifPermissionLabel();
+}
+
+// 次回来院予定日のカウントダウン表示（入力欄の値はここでは触らない。ユーザー入力中に上書きしないため）
+function renderVisit(now) {
+  if (!nextVisit) {
+    el.nextVisitCountdown.textContent = '';
+    el.nextVisitCountdown.classList.remove('overdue');
+    return;
+  }
+  const diffDays = Math.round((startOfDay(nextVisit) - startOfDay(now)) / DAY_MS);
+  el.nextVisitCountdown.classList.toggle('overdue', diffDays < 0);
+  if (diffDays > 0) {
+    el.nextVisitCountdown.textContent = `来院まであと${diffDays}日`;
+  } else if (diffDays === 0) {
+    el.nextVisitCountdown.textContent = '本日が来院予定日です';
+  } else {
+    el.nextVisitCountdown.textContent = `予定日から${-diffDays}日経過しています`;
+  }
 }
 
 function renderStage(now) {
@@ -811,12 +858,52 @@ function computeSessions(events, now) {
     const start = events[i].ts;
     const isLast = i === events.length - 1;
     const end = isLast ? now : events[i + 1].ts;
-    sessions.push({ type: events[i].type, start, end, ongoing: isLast });
+    sessions.push({ type: events[i].type, start, end, ongoing: isLast, eventIndex: i });
   }
   return sessions;
 }
 
 let sessionLogFilter = 'on';
+
+// セッション（1件の装着/外し区間）の開始・終了時刻を編集する。
+// 開始 = events[eventIndex].ts、終了 = events[eventIndex+1].ts（進行中の場合は編集不可）
+function editSession(eventIndex, newStartVal, newEndVal, ongoing) {
+  const newStart = fromInputValue(newStartVal);
+  if (!newStart) {
+    alert('開始日時を入力してください');
+    return;
+  }
+  const prevTs = eventIndex > 0 ? events[eventIndex - 1].ts : -Infinity;
+  if (newStart <= prevTs) {
+    alert('開始日時は直前の記録より後にしてください');
+    return;
+  }
+
+  let newEnd = null;
+  if (!ongoing) {
+    newEnd = fromInputValue(newEndVal);
+    if (!newEnd) {
+      alert('終了日時を入力してください');
+      return;
+    }
+    if (newEnd <= newStart) {
+      alert('終了日時は開始日時より後にしてください');
+      return;
+    }
+    const nextTs = eventIndex + 2 < events.length ? events[eventIndex + 2].ts : Infinity;
+    if (newEnd >= nextTs) {
+      alert('終了日時は次の記録より前にしてください');
+      return;
+    }
+  }
+
+  pushUndo();
+  events[eventIndex].ts = newStart;
+  if (!ongoing) events[eventIndex + 1].ts = newEnd;
+  saveEvents(events);
+  render();
+  showToast('記録を修正しました', { undo: true });
+}
 
 function renderSessionLog(now) {
   const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
@@ -839,6 +926,9 @@ function renderSessionLog(now) {
     const d = new Date(s.start);
     const li = document.createElement('li');
 
+    const row = document.createElement('div');
+    row.className = 'session-log-row';
+
     const dateSpan = document.createElement('span');
     dateSpan.className = 'session-log-date';
     dateSpan.textContent = `${d.getMonth() + 1}/${d.getDate()}（${dayNames[d.getDay()]}）`;
@@ -851,9 +941,55 @@ function renderSessionLog(now) {
     durationSpan.className = 'session-log-duration';
     durationSpan.textContent = formatDuration(s.end - s.start);
 
-    li.appendChild(dateSpan);
-    li.appendChild(rangeSpan);
-    li.appendChild(durationSpan);
+    row.appendChild(dateSpan);
+    row.appendChild(rangeSpan);
+    row.appendChild(durationSpan);
+    li.appendChild(row);
+
+    const detail = document.createElement('div');
+    detail.className = 'session-log-detail';
+
+    const startLabel = document.createElement('label');
+    startLabel.className = 'settings-label';
+    startLabel.textContent = '開始';
+    const startInput = document.createElement('input');
+    startInput.type = 'datetime-local';
+    startInput.className = 'session-edit-input';
+    startInput.value = toInputValue(s.start);
+    detail.appendChild(startLabel);
+    detail.appendChild(startInput);
+
+    let endInput = null;
+    if (s.ongoing) {
+      const note = document.createElement('p');
+      note.className = 'session-log-note';
+      note.textContent = '進行中のため終了時刻は編集できません。';
+      detail.appendChild(note);
+    } else {
+      const endLabel = document.createElement('label');
+      endLabel.className = 'settings-label';
+      endLabel.textContent = '終了';
+      endInput = document.createElement('input');
+      endInput.type = 'datetime-local';
+      endInput.className = 'session-edit-input';
+      endInput.value = toInputValue(s.end);
+      detail.appendChild(endLabel);
+      detail.appendChild(endInput);
+    }
+
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'session-edit-save';
+    saveBtn.textContent = '保存';
+    saveBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      editSession(s.eventIndex, startInput.value, endInput ? endInput.value : null, s.ongoing);
+    });
+    detail.appendChild(saveBtn);
+
+    li.appendChild(detail);
+    row.addEventListener('click', () => li.classList.toggle('open'));
+
     el.sessionLogList.appendChild(li);
   });
 }
@@ -1033,6 +1169,22 @@ el.alertInput.addEventListener('change', () => {
   saveAlertMinutes(alertMinutes);
   lastAlertTs = 0;
   render();
+  showToast('保存しました');
+});
+
+el.nextVisitInput.value = nextVisit ? dateKey(nextVisit) : '';
+el.nextVisitInput.addEventListener('change', () => {
+  const val = el.nextVisitInput.value;
+  nextVisit = val ? new Date(`${val}T00:00:00`).getTime() : null;
+  saveNextVisit(nextVisit);
+  render();
+  showToast('保存しました');
+});
+
+el.memoInput.value = memo;
+el.memoInput.addEventListener('change', () => {
+  memo = el.memoInput.value;
+  saveMemo(memo);
   showToast('保存しました');
 });
 

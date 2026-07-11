@@ -690,17 +690,39 @@ main {
 
 .session-log-list li {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 15px;
-  padding: 10px 14px;
+  flex-direction: column;
   border-radius: 14px;
   background: var(--bg);
   box-shadow:
     3px 3px 7px var(--clay-dark),
     -2px -2px 5px var(--clay-light);
+  overflow: hidden;
 }
+
+.session-log-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 15px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.session-log-row::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--text-soft);
+  border-bottom: 2px solid var(--text-soft);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  transition: transform 0.22s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.session-log-list li.open .session-log-row::after { transform: rotate(225deg); }
 
 .session-log-date {
   flex-shrink: 0;
@@ -722,6 +744,56 @@ main {
   color: var(--text-soft);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
+}
+
+.session-log-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 14px;
+}
+
+.session-log-list li.open .session-log-detail {
+  max-height: 260px;
+  padding: 0 14px 14px;
+}
+
+.session-log-detail .settings-label {
+  margin: 10px 0 6px;
+}
+
+.session-log-detail .settings-label:first-of-type { margin-top: 0; }
+
+.session-edit-input {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--card-bg);
+  box-shadow: var(--clay-pressed);
+}
+
+.session-log-note {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.session-edit-save {
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px;
+  border: none;
+  border-radius: 10px;
+  background: radial-gradient(circle at 38% 35%, #54C495, #2FA076);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .session-log-empty {
@@ -1209,7 +1281,8 @@ main {
 
 #goalInput,
 #totalAlignersInput,
-#alertInput {
+#alertInput,
+#nextVisitInput {
   width: 100%;
   padding: 11px 14px;
   border-radius: 12px;
@@ -1225,7 +1298,41 @@ main {
 
 #goalInput:focus,
 #totalAlignersInput:focus,
-#alertInput:focus {
+#alertInput:focus,
+#nextVisitInput:focus {
+  box-shadow:
+    inset 3px 3px 7px rgba(63,55,43,0.16),
+    inset -2px -2px 5px rgba(255,255,255,0.6),
+    0 0 0 3px rgba(87,206,160,0.25);
+}
+
+.visit-countdown {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.visit-countdown.overdue { color: var(--peach-deep); }
+
+.memo-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  resize: vertical;
+  box-shadow: var(--clay-pressed);
+  transition: box-shadow 0.2s ease;
+}
+
+.memo-textarea:focus {
   box-shadow:
     inset 3px 3px 7px rgba(63,55,43,0.16),
     inset -2px -2px 5px rgba(255,255,255,0.6),
