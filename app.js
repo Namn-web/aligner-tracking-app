@@ -1172,10 +1172,10 @@ el.alertInput.addEventListener('change', () => {
   showToast('保存しました');
 });
 
-el.nextVisitInput.value = nextVisit ? dateKey(nextVisit) : '';
+el.nextVisitInput.value = nextVisit ? toInputValue(nextVisit) : '';
 el.nextVisitInput.addEventListener('change', () => {
   const val = el.nextVisitInput.value;
-  nextVisit = val ? new Date(`${val}T00:00:00`).getTime() : null;
+  nextVisit = val ? fromInputValue(val) : null;
   saveNextVisit(nextVisit);
   render();
   showToast('保存しました');

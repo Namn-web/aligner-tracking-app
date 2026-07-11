@@ -1281,8 +1281,7 @@ main {
 
 #goalInput,
 #totalAlignersInput,
-#alertInput,
-#nextVisitInput {
+#alertInput {
   width: 100%;
   padding: 11px 14px;
   border-radius: 12px;
@@ -1298,7 +1297,29 @@ main {
 
 #goalInput:focus,
 #totalAlignersInput:focus,
-#alertInput:focus,
+#alertInput:focus {
+  box-shadow:
+    inset 3px 3px 7px rgba(63,55,43,0.16),
+    inset -2px -2px 5px rgba(255,255,255,0.6),
+    0 0 0 3px rgba(87,206,160,0.25);
+}
+
+#nextVisitInput {
+  width: 100%;
+  max-width: calc(100% - 4px);
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  box-shadow: var(--clay-pressed);
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
 #nextVisitInput:focus {
   box-shadow:
     inset 3px 3px 7px rgba(63,55,43,0.16),
