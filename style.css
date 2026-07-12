@@ -691,6 +691,7 @@ main {
 .session-log-list li {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   border-radius: 14px;
   background: var(--bg);
   box-shadow:
