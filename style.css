@@ -767,14 +767,16 @@ main {
 
 .session-edit-input {
   width: 100%;
-  padding: 9px 10px;
+  max-width: calc(100% - 4px);
+  padding: 6px 8px;
   border-radius: 10px;
   border: none;
-  font-size: 14px;
+  font-size: 13px;
   font-family: inherit;
   color: var(--text);
   background: var(--card-bg);
   box-shadow: var(--clay-pressed);
+  overflow: hidden;
 }
 
 .session-log-note {
